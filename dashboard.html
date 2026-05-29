@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link rel="stylesheet" href="css/estilos.css">
-
 </head>
 <body>
 
@@ -18,6 +17,7 @@
         <div class="logo-area">
             <i class="fas fa-cube"></i>
             <span>PROJETO MINERVA</span>
+            <img src="Design sem nome.png" alt="Logo Parceria FAETEC ETEVM" class="logo-parceria">
         </div>
         <div class="user-area">
             <div class="user-greeting">Olá, <strong id="aluno-nome">Aluno</strong></div>
@@ -71,9 +71,7 @@
     <script src="js/auth.js"></script>
 
     <script>
-        // Inteligência que valida e tranca os cards em tempo real
         function aplicarPermissoesPainel() {
-            // Recupera as permissões recolhidas da planilha pelo auth.js
             const permsRaw = localStorage.getItem("permissoes_minerva");
             
             if (!permsRaw) {
@@ -89,7 +87,6 @@
             const cardDrone = document.getElementById("card-drone");
             const overlayDrone = document.getElementById("overlay-drone");
 
-            // 1. Validação do Curso de Impressão 3D
             if (permissoes.impressao3D === true) {
                 card3D.classList.remove("locked", "locked-click");
                 overlay3D.style.display = "none";
@@ -98,7 +95,6 @@
                 overlay3D.style.display = "flex";
             }
 
-            // 2. Validação do Curso de Drone
             if (permissoes.drone === true) {
                 cardDrone.classList.remove("locked", "locked-click");
                 overlayDrone.style.display = "none";
@@ -108,16 +104,13 @@
             }
         }
 
-        // Monitor do Firebase para puxar o nome real do Aluno no topo
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById("aluno-nome").innerText = user.displayName || user.email.split('@')[0];
-                // Quando o Firebase garante que o login existe, aplica as travas visuais
                 aplicarPermissoesPainel();
             }
         });
 
-        // Executa uma dupla checagem assim que a tela abre
         window.addEventListener('DOMContentLoaded', aplicarPermissoesPainel);
     </script>
 </body>
