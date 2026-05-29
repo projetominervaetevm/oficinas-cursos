@@ -2,14 +2,40 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #fff; }
-        iframe { border: none; width: 100%; height: 100%; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFs e Materiais - Oficina 3D</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- O id da sua pasta de manuais rodando nativo na página dedicada -->
-    <iframe src="https://drive.google.com/drive/folders/1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo" allowfullscreen></iframe>
+
+    <nav class="navbar">
+    <div class="logo">
+        <img src="minerva.png" alt="Minerva Logo" style="height: 50px; width: auto;">
+    </div>
+    <button id="btn-logout" onclick="window.deslogarUsuario()" class="btn-logout">
+        <i class="fas fa-sign-out-alt"></i> Sair
+    </button>
+</nav>
+
+    <main class="materials-container">
+        <header class="welcome-box">
+            <h1>Biblioteca de Materiais</h1>
+            <p>Todos os arquivos abaixo são atualizados em tempo real. Basta clicar para abrir ou baixar.</p>
+        </header>
+
+        <section class="material-section">
+            <h2><i class="fas fa-folder-open"></i> Arquivos da Oficina (Nuvem)</h2>
+            
+            <div class="drive-wrapper">
+                <iframe src="https://drive.google.com/embeddedfolderview?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo" 
+                        class="drive-iframe"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="auth.js"></script>
 </body>
 </html>
-
