@@ -1,63 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal do Aluno - Projeto Minerva</title>
+    <title>Login - Projeto Minerva</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <link rel="stylesheet" href="css/estilos.css">
+    
+    <link rel="stylesheet" href="./css/estilos.css">
 </head>
 <body>
 
     <div class="login-container">
-        <i class="fas fa-cube logo-icon"></i>
-        <h1>PROJETO <span>MINERVA</span></h1>
-        <p class="subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
-        <div class="logo-area">
-    <i class="fas fa-cube"></i>
-    <span>PROJETO MINERVA</span>
-    <img src="/images/logominerva.png" alt="Logo FAETEC ETEVM" class="logo-parceria">
-    </div>
-        <button class="btn-google" id="btn-login-google">
-            <i class="fab fa-google"></i> Entrar com o Google
-        </button>
-
-        <div class="footer-text">
-            Plataforma Maker • 2026
+        <i class="fas fa-cube"></i>
+        <h1 class="login-title">PROJETO <span style="color: #00a3ff;">MINERVA</span></h1>
+        
+        <div style="margin-bottom: 25px; display: flex; justify-content: center;">
+            <img src="/images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
         </div>
+
+        <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
+        
+        <button class="btn-google" id="login-btn">
+            <i class="fab fa-google" style="color: #ea4335;"></i> Entrar com o Google
+        </button>
+        
+        <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-    <script src="js/firebase-config.js"></script>
-
-    <script src="js/auth.js"></script>
-
-    <script>
-        // Executa o login do Google ao clicar no botão
-        document.getElementById('btn-login-google').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            
-            // Força o Google a sempre pedir para escolher a conta (evita login automático indesejado)
-            provider.setCustomParameters({ prompt: 'select_account' });
-
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    // O sucesso do login disparará o gatilho automático lá no js/auth.js 
-                    // que fará a checagem com o Google Sheets.
-                    console.log("Autenticado via Google com sucesso:", result.user.email);
-                })
-                .catch((error) => {
-                    console.error("Erro no login do Google:", error);
-                    alert("Falha na autenticação com o Google: " + error.message);
-                });
-        });
-    </script>
-</body>
+    </body>
 </html>

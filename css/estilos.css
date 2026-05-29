@@ -11,14 +11,78 @@ body {
     font-family: 'Inter', sans-serif; 
     background-color: #121926; 
     color: #f1f5f9;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
 /* ==========================================
-   2. NAVBAR SUPERIOR GLOBAL
+   2. TELA DE LOGIN (index.html)
+   ========================================== */
+.login-container {
+    margin: auto;
+    background-color: #1a2332;
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.login-container .fa-cube {
+    font-size: 48px;
+    color: #00a3ff;
+    margin-bottom: 20px;
+}
+
+.login-title {
+    font-family: 'Urbanist', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 14px;
+    background-color: white;
+    color: #121926;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.btn-google:hover {
+    background-color: #f1f5f9;
+}
+
+.login-footer {
+    margin-top: 30px;
+    font-size: 11px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ==========================================
+   3. NAVBAR SUPERIOR GLOBAL
    ========================================== */
 .navbar, .navbar-curso {
     background-color: #1a2332; 
@@ -38,11 +102,6 @@ body {
     gap: 15px; 
 }
 
-.logo-group .fa-cube { 
-    color: #00a3ff; 
-    font-size: 24px; 
-}
-
 .logo-group span { 
     font-family: 'Urbanist', sans-serif; 
     font-size: 18px; 
@@ -51,7 +110,6 @@ body {
     color: white;
 }
 
-/* Logo da Parceria da FAETEC / ETEVM enviado pelo usuário */
 .logo-parceria {
     height: 42px; 
     width: auto;  
@@ -60,7 +118,6 @@ body {
     margin-left: 5px;
 }
 
-/* Botão Voltar */
 .btn-voltar {
     background: #00a3ff; 
     color: white; 
@@ -75,20 +132,18 @@ body {
     transition: 0.2s;
 }
 
-.btn-voltar:hover { 
-    background-color: #008be0; 
-}
+.btn-voltar:hover { background-color: #008be0; }
 
 /* ==========================================
-   3. ETRUTURA DE DUAS COLUNAS (SPA COM IFRAME)
+   4. ESTRUTURA DE CURSOS (DUAS COLUNAS / IFRAME)
    ========================================== */
 .layout-container { 
     display: flex; 
     flex-grow: 1; 
+    height: calc(100vh - 70px);
     overflow: hidden; 
 }
 
-/* Espaço do Iframe na Esquerda */
 .content-frame-area { 
     flex-grow: 1; 
     height: 100%; 
@@ -99,10 +154,8 @@ body {
     width: 100%; 
     height: 100%; 
     border: none; 
-    background: #121926; 
 }
 
-/* Painel de Recursos na Direita */
 .resources-sidebar {
     width: 380px; 
     min-width: 380px; 
@@ -125,7 +178,6 @@ body {
     margin-bottom: 10px; 
 }
 
-/* Botões do Menu Lateral */
 .resource-btn {
     background-color: #121926; 
     border: 1px solid rgba(255,255,255,0.05);
@@ -147,29 +199,11 @@ body {
     transform: translateX(-3px); 
 }
 
-.resource-btn i { 
-    font-size: 20px; 
-    width: 25px; 
-    text-align: center; 
-}
+.resource-btn i { font-size: 20px; width: 25px; text-align: center; }
+.resource-btn .info { display: flex; flex-direction: column; }
+.resource-btn .info .title { font-weight: 600; font-size: 14px; }
+.resource-btn .info .desc { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-.resource-btn .info { 
-    display: flex; 
-    flex-direction: column; 
-}
-
-.resource-btn .info .title { 
-    font-weight: 600; 
-    font-size: 14px; 
-}
-
-.resource-btn .info .desc { 
-    font-size: 12px; 
-    color: #64748b; 
-    margin-top: 2px; 
-}
-
-/* Cores Estilizadas dos Ícones */
 .color-pdf { color: #ef4444; }
 .color-video { color: #ff0000; }
 .color-dica { color: #eab308; }
