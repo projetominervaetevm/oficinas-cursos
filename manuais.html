@@ -4,31 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDFs e Materiais - Oficina 3D</title>
-    <link rel="stylesheet" href="./css/estilos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Força a página interna a ocupar todo o espaço do iframe principal */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background-color: #121824; /* Combina com o fundo escuro do painel principal */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .materials-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        .welcome-box h1 {
+            color: #ffffff;
+            font-size: 20px;
+            margin: 0 0 4px 0;
+        }
+
+        .welcome-box p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin: 0 0 15px 0;
+        }
+
+        .material-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 60px);
+        }
+
+        .material-section h2 {
+            color: #38bdf8; /* Tom azul maker */
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Faz a caixa do drive expandir até o fundo da página */
+        .drive-wrapper {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+        }
+
+        .drive-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff; /* Fundo branco para a lista do drive ficar legível */
+        }
+    </style>
 </head>
 <body>
-
-  
-
     <main class="materials-container">
         <header class="welcome-box">
             <h1>Biblioteca de Materiais</h1>
             <p>Todos os arquivos abaixo são atualizados em tempo real. Basta clicar para abrir ou baixar.</p>
         </header>
-
+        
         <section class="material-section">
             <h2><i class="fas fa-folder-open"></i> Arquivos da Oficina (Nuvem)</h2>
-            
             <div class="drive-wrapper">
-                <iframe src="https://drive.google.com/embeddedfolderview?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo" 
-                        class="drive-iframe"
-                        allowfullscreen>
-                </iframe>
+                <!-- Adicionado o #list no final do link para forçar uma listagem limpa e organizada -->
+                <iframe src="https://drive.google.com/embeddedfolderview?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo" class="drive-iframe" allowfullscreen></iframe>
             </div>
         </section>
     </main>
-
-    <script type="module" src="./js/auth.js"></script>
 </body>
 </html>
+
