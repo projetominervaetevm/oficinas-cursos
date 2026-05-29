@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Pilotagem de Drone - Projeto Minerva</title>
+    <title>Curso de Drones - Projeto Minerva</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
- 
     <link rel="stylesheet" href="css/estilos.css">
 
 </head>
@@ -18,7 +17,7 @@
     <nav class="navbar-curso">
         <div class="logo-group">
             <i class="fas fa-cube"></i>
-            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA</span>
+            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA • DRONES</span>
         </div>
         <a href="dashboard.html" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar ao Painel
@@ -26,53 +25,55 @@
     </nav>
 
     <div class="layout-container">
-        <main class="content-area">
-            <h1>Curso de <span>Pilotagem de Drones</span></h1>
-            <p>Bem-vindo ao ambiente de formação de pilotos de multirotores UAV. Este espaço reúne os conhecimentos sobre aerodinâmica, automação e regras aeroespaciais.</p>
-            
-            <h2>1. Princípio de Estabilização de Sistemas UAV</h2>
-            <p>Drones multirotores mantêm sua estabilidade e executam movimentos alterando a velocidade angular (RPM) de seus motores de forma independente. Esse processamento dinâmico é coordenado por uma unidade central contendo sensores como acelerômetros e giroscópios (IMU).</p>
-            
-            <h2>2. Regulamentação Espacial Civil</h2>
-            <p>Toda operação aérea civil com aeronaves não tripuladas no Brasil deve estar registrada no sistema SISANT da ANAC e necessita de solicitações de voo aprovadas no DECEA (através do sistema SARPAS), respeitando zonas de aproximação de aeródromos.</p>
+        <main class="content-frame-area">
+            <iframe id="conteudo-frame" src="https://drive.google.com/embeddedfolder/id?id=SUA_PASTA_PADRAO_AQUI"></iframe>
         </main>
 
         <aside class="resources-sidebar">
-            <div class="sidebar-title">Materiais de Apoio</div>
+            <div class="sidebar-title">Navegação do Curso</div>
             
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn active" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_LEGISLACAO_DO_DRIVE', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Legislação e Manuais</span>
                     <span class="desc">Apostilas DECEA, ANAC e Checklists</span>
                 </div>
-            </a>
+            </button>
 
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_VIDEOS_DRONE_DO_DRIVE', this)">
                 <i class="fab fa-youtube color-video"></i>
                 <div class="info">
                     <span class="title">Aulas de Operação</span>
-                    <span class="desc">Vídeos práticos de decolagem</span>
+                    <span class="desc">Vídeos práticos de decolagem e voo</span>
                 </div>
-            </a>
+            </button>
 
-            <div class="resource-btn" onclick="alert('Dica Operacional: Nunca decole o drone sem estabelecer a trava de satélites (Home Point gravado). Caso aconteça uma falha de sinal, o recurso Return-to-Home falhará!')">
+            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_DICAS_DRONE_DO_DRIVE', this)">
                 <i class="fas fa-lightbulb color-dica"></i>
                 <div class="info">
                     <span class="title">Segurança de Voo</span>
                     <span class="desc">Checklist essencial de satélites</span>
                 </div>
-            </div>
+            </button>
 
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn" onclick="carregarConteudo('COLOQUE_AQUI_O_LINK_DO_SEU_FORUM_DE_DRONES', this)">
                 <i class="fas fa-comments color-forum"></i>
                 <div class="info">
                     <span class="title">Fórum dos Pilotos</span>
-                    <span class="desc">Tópicos sobre manutenção e drones</span>
+                    <span class="desc">Espaço de discussão técnica</span>
                 </div>
-            </a>
+            </button>
         </aside>
     </div>
 
+    <script>
+        // Função dinâmica para o frame
+        function carregarConteudo(url, elemento) {
+            document.getElementById('conteudo-frame').src = url;
+            
+            document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
+            elemento.classList.add('active');
+        }
+    </script>
 </body>
 </html>
