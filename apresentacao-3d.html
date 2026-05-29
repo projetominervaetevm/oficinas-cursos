@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficina de Impressão 3D - Projeto Minerva</title>
-    <!-- Links de fontes e ícones restaurados com as URLs corretas de funcionamento -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="css/estilos.css">
 </head>
@@ -26,15 +25,15 @@
 
     <div class="layout-container">
         <main class="content-frame-area">
-            <!-- Iframe que mantém a página inicial padrão do curso -->
+            <!-- Iframe principal que vai renderizar as subpáginas HTML sem estourar erros -->
             <iframe id="conteudo-frame" src="./inicio-3d.html" allow="autoplay"></iframe>
         </main>
 
         <aside class="resources-sidebar">
             <div class="sidebar-title">Navegação do Curso</div>
             
-            <!-- BOTÃO DE MANUAIS: Configurado com o seu link público direto do Drive -->
-            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/drive/folders/1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo', this)">
+            <!-- Aponta para a página local de manuais -->
+            <button class="resource-btn" onclick="carregarConteudo('./manuais.html', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Manuais Técnicos</span>
@@ -42,8 +41,8 @@
                 </div>
             </button>
 
-            <!-- BOTÃO DE VÍDEOS: Substitua o link inteiro pelo link público da pasta correspondente -->
-            <button class="resource-btn" onclick="carregarConteudo('https://google.com', this)">
+            <!-- Aponta para a página local de vídeos -->
+            <button class="resource-btn" onclick="carregarConteudo('./videos.html', this)">
                 <i class="fab fa-youtube color-video"></i>
                 <div class="info">
                     <span class="title">Videoaulas Práticas</span>
@@ -51,8 +50,8 @@
                 </div>
             </button>
 
-            <!-- BOTÃO DE DICAS: Substitua o link inteiro pelo link público da pasta correspondente -->
-            <button class="resource-btn" onclick="carregarConteudo('https://google.com', this)">
+            <!-- Aponta para a página local de dicas (Crie o dicas.html parecido com os outros) -->
+            <button class="resource-btn" onclick="carregarConteudo('./dicas.html', this)">
                 <i class="fas fa-lightbulb color-dica"></i>
                 <div class="info">
                     <span class="title">Dicas e Macetes</span>
@@ -60,7 +59,7 @@
                 </div>
             </button>
 
-            <!-- BOTÃO DO FÓRUM: Mantém o funcionamento normal dentro do iframe se o fórum permitir -->
+            <!-- Link do fórum externo ou interno -->
             <button class="resource-btn" onclick="carregarConteudo('LINK_DO_FORUM', this)">
                 <i class="fas fa-comments color-forum"></i>
                 <div class="info">
@@ -73,19 +72,13 @@
 
     <script>
         function carregarConteudo(url, elemento) {
-            // Se o link pertencer ao Google Drive, abre em uma nova aba com segurança total
-            if (url.includes('drive.google.com')) {
-                window.open(url, '_blank', 'noopener,noreferrer');
-            } else {
-                // Se for um link comum ou interno, atualiza o iframe normalmente
-                document.getElementById('conteudo-frame').src = url;
-            }
+            // Atualiza o iframe do painel com a página HTML local correspondente
+            document.getElementById('conteudo-frame').src = url;
 
-            // Mantém a sua lógica excelente de destacar visualmente o botão clicado
+            // Altera visualmente a classe ativa do menu lateral
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
             elemento.classList.add('active');
         }
     </script>
 </body>
 </html>
-
