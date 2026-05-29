@@ -30,37 +30,34 @@
         }
         .btn-voltar:hover { background-color: #008be0; }
 
-        /* Estrutura do Curso (Duas Colunas) */
+        /* Estrutura Dinâmica */
         .layout-container { display: flex; flex-grow: 1; overflow: hidden; }
         
-        /* Coluna da Esquerda: Conteúdo Técnico Didático */
-        .content-area { flex-grow: 1; padding: 50px; overflow-y: auto; line-height: 1.7; }
-        .content-area h1 { font-family: 'Urbanist', sans-serif; font-size: 38px; margin-bottom: 15px; }
-        .content-area h1 span { color: #00a3ff; }
-        .content-area h2 { font-family: 'Urbanist', sans-serif; font-size: 24px; margin: 35px 0 15px 0; color: #00a3ff; }
-        .content-area p { color: #94a3b8; font-size: 16px; margin-bottom: 20px; }
+        /* Frame Dinâmico à Esquerda */
+        .content-frame-area { flex-grow: 1; height: 100%; background-color: #121926; border: none; }
+        iframe { width: 100%; height: 100%; border: none; background: #121926; }
         
-        /* Coluna da Direita: Painel de Recursos */
+        /* Menu Fixo à Direita */
         .resources-sidebar {
             width: 380px; min-width: 380px; background-color: #1a2332;
             border-left: 1px solid rgba(255,255,255,0.05); padding: 30px;
-            display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
         }
-        .sidebar-title { font-family: 'Urbanist', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 10px; }
+        .sidebar-title { font-family: 'Urbanist', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 10px; }
         
-        /* Botões Técnicos de Recursos */
+        /* Botões Interativos */
         .resource-btn {
             background-color: #121926; border: 1px solid rgba(255,255,255,0.05);
-            padding: 18px; border-radius: 12px; color: white; text-decoration: none;
+            padding: 16px; border-radius: 12px; color: white;
             display: flex; align-items: center; gap: 15px; transition: all 0.2s ease; cursor: pointer;
+            text-align: left; width: 100%;
         }
-        .resource-btn:hover { border-color: #00a3ff; background-color: rgba(0, 163, 255, 0.05); transform: translateX(5px); }
-        .resource-btn i { font-size: 22px; width: 30px; text-align: center; }
+        .resource-btn:hover, .resource-btn.active { border-color: #00a3ff; background-color: rgba(0, 163, 255, 0.07); transform: translateX(-3px); }
+        .resource-btn i { font-size: 20px; width: 25px; text-align: center; }
         .resource-btn .info { display: flex; flex-direction: column; }
-        .resource-btn .info .title { font-weight: 600; font-size: 15px; }
+        .resource-btn .info .title { font-weight: 600; font-size: 14px; }
         .resource-btn .info .desc { font-size: 12px; color: #64748b; margin-top: 2px; }
         
-        /* Cores dos ícones */
         .color-pdf { color: #ef4444; }
         .color-video { color: #ff0000; }
         .color-dica { color: #eab308; }
@@ -72,7 +69,7 @@
     <nav class="navbar-curso">
         <div class="logo-group">
             <i class="fas fa-cube"></i>
-            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA</span>
+            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA • IMPRESSÃO 3D</span>
         </div>
         <a href="dashboard.html" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar ao Painel
@@ -80,53 +77,56 @@
     </nav>
 
     <div class="layout-container">
-        <main class="content-area">
-            <h1>Oficina de <span>Impressão 3D</span></h1>
-            <p>Seja bem-vindo ao módulo prático de manufatura aditiva. Aqui você aprenderá as bases de engenharia de materiais e parametrização necessárias para dominar impressoras 3D FDM.</p>
-            
-            <h2>1. Introdução à Tecnologia FDM</h2>
-            <p>A Modelagem por Deposição Fundida (FDM) funciona através do derretimento controlado de um filamento termoplástico, que é empurrado por uma extrusora através de um bocal aquecido (Nozzle), depositando o material camada por camada sobre uma mesa coordenada.</p>
-            
-            <h2>2. Alinhamento Dinâmico e Calibração</h2>
-            <p>O maior segredo para uma impressão bem-sucedida reside na primeira camada. Um nivelamento incorreto pode gerar falta de aderência (fazendo a peça descolar no meio do processo) ou causar o entupimento do bocal caso a distância entre o bico e o vidro seja nula.</p>
+        <main class="content-frame-area">
+            <iframe id="conteudo-frame" src="https://drive.google.com/embeddedfolder/id?id=SUA_PASTA_PADRAO_AQUI"></iframe>
         </main>
 
         <aside class="resources-sidebar">
-            <div class="sidebar-title">Materiais de Apoio</div>
+            <div class="sidebar-title">Navegação do Curso</div>
             
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn active" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_PDFS_DO_DRIVE', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Manuais Técnicos</span>
-                    <span class="desc">Guias em PDF e Perfis do Cura</span>
+                    <span class="desc">Guias STL e Perfis do Cura</span>
                 </div>
-            </a>
+            </button>
 
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_VIDEOS_DO_DRIVE', this)">
                 <i class="fab fa-youtube color-video"></i>
                 <div class="info">
                     <span class="title">Videoaulas Práticas</span>
-                    <span class="desc">Demonstração de calibração</span>
+                    <span class="desc">Demonstrações e calibração</span>
                 </div>
-            </a>
+            </button>
 
-            <div class="resource-btn" onclick="alert('Dica de Engenharia: Ao utilizar filamento ABS, mantenha a impressora fechada para evitar o efeito Warping causado por correntes de ar frio!')">
+            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_DICAS_DO_DRIVE', this)">
                 <i class="fas fa-lightbulb color-dica"></i>
                 <div class="info">
-                    <span class="title">Dicas Rápidas</span>
-                    <span class="desc">Macete de fatiamento e filamentos</span>
+                    <span class="title">Dicas e Macetes</span>
+                    <span class="desc">Segredos de engenharia maker</span>
                 </div>
-            </div>
+            </button>
 
-            <a href="#" target="_blank" class="resource-btn">
+            <button class="resource-btn" onclick="carregarConteudo('COLOQUE_AQUI_O_LINK_DO_SEU_FORUM_OU_PLANILHA', this)">
                 <i class="fas fa-comments color-forum"></i>
                 <div class="info">
                     <span class="title">Fórum da Comunidade</span>
-                    <span class="desc">Tire dúvidas com outros makers</span>
+                    <span class="desc">Tire dúvidas com o grupo</span>
                 </div>
-            </a>
+            </button>
         </aside>
     </div>
 
+    <script>
+        // Função que altera o link do frame sem recarregar a página inteira
+        function carregarConteudo(url, elemento) {
+            document.getElementById('conteudo-frame').src = url;
+            
+            // Remove a classe ativa de todos os botões e adiciona no clicado
+            document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
+            elemento.classList.add('active');
+        }
+    </script>
 </body>
 </html>
