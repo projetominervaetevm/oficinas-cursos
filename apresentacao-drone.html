@@ -3,260 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Drones - Projeto Minerva</title>
+    <title>Curso de Pilotagem de Drone - Projeto Minerva</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #121926;
-            font-family: 'Inter', sans-serif; color: #f1f5f9;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: #121926; color: #f1f5f9;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
         
-        /* Navbar Fixa Superior */
-        .navbar-apresentacao {
-            background-color: #1a2332; height: 70px;
+        /* Navbar Superior */
+        .navbar-curso {
+            background-color: #1a2332; height: 70px; min-height: 70px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 30px; position: fixed; top: 0; width: 100%; z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05); box-sizing: border-box;
+            padding: 0 30px; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .logo-group { display: flex; align-items: center; gap: 15px; }
-        .logo-group .fa-cube { color: #deff9a; font-size: 24px; }
-        
+        .logo-group { display: flex; align-items: center; gap: 12px; }
+        .logo-group .fa-cube { color: #deff9a; font-size: 22px; }
         .btn-voltar {
-            background: #deff9a; color: #121926; text-decoration: none; 
-            padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 14px; 
-            transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;
+            background: #deff9a; color: #121926; text-decoration: none; padding: 8px 16px;
+            border-radius: 6px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
         }
         .btn-voltar:hover { background-color: #c5e680; }
 
-        .btn-logout {
-            background: transparent; border: 1px solid #ef4444; color: #ef4444;
-            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
-        }
-        .btn-logout:hover { background: #ef4444; color: white; }
-
-        /* Estrutura de Slides */
-        .slider-wrapper {
-            display: flex; width: 1200vw; height: 100%;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .slide {
-            width: 100vw; height: 100vh; flex-shrink: 0;
-            display: flex; flex-direction: column; justify-content: center;
-            padding: 100px 10% 40px 10%; box-sizing: border-box;
-        }
-        .slide h1 { font-family: 'Urbanist', sans-serif; font-size: 64px; line-height: 1.1; margin-bottom: 20px; }
-        .slide h1 span { color: #deff9a; }
-        .slide-title { font-family: 'Urbanist', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 40px; border-left: 5px solid #deff9a; padding-left: 20px; }
-        .slide p { font-size: 18px; line-height: 1.6; color: #94a3b8; }
-        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-        .tile { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); }
-        .tile h3 { color: #deff9a; font-size: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        /* Estrutura do Curso (Duas Colunas) */
+        .layout-container { display: flex; flex-grow: 1; overflow: hidden; }
         
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.02); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 18px; text-align: left; }
-        th { background-color: rgba(222, 255, 154, 0.1); color: white; border-bottom: 2px solid #deff9a; }
-        td { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        /* Coluna da Esquerda: Conteúdo Técnico Didático */
+        .content-area { flex-grow: 1; padding: 50px; overflow-y: auto; line-height: 1.7; }
+        .content-area h1 { font-family: 'Urbanist', sans-serif; font-size: 38px; margin-bottom: 15px; }
+        .content-area h1 span { color: #deff9a; }
+        .content-area h2 { font-family: 'Urbanist', sans-serif; font-size: 24px; margin: 35px 0 15px 0; color: #deff9a; }
+        .content-area p { color: #94a3b8; font-size: 16px; margin-bottom: 20px; }
         
-        .chart-row { display: flex; align-items: center; gap: 25px; margin-bottom: 20px; }
-        .chart-label { width: 200px; text-align: right; font-weight: 600; }
-        .chart-bar-bg { flex-grow: 1; height: 24px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; }
-        .chart-bar-fill { height: 100%; background: linear-gradient(90deg, #deff9a, #00a3ff); border-radius: 12px; }
-        
-        /* Interface de Navegação */
-        .nav-ui { position: fixed; bottom: 40px; right: 40px; display: flex; gap: 15px; z-index: 10000; }
-        .nav-btn {
-            width: 55px; height: 55px; border-radius: 50%; background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.15); color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.2s ease;
+        /* Coluna da Direita: Painel de Recursos */
+        .resources-sidebar {
+            width: 380px; min-width: 380px; background-color: #1a2332;
+            border-left: 1px solid rgba(255,255,255,0.05); padding: 30px;
+            display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
         }
-        .nav-btn:hover { background: #deff9a; border-color: #deff9a; color: #121926; transform: scale(1.05); }
+        .sidebar-title { font-family: 'Urbanist', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 10px; }
+        
+        /* Botões Técnicos de Recursos */
+        .resource-btn {
+            background-color: #121926; border: 1px solid rgba(255,255,255,0.05);
+            padding: 18px; border-radius: 12px; color: white; text-decoration: none;
+            display: flex; align-items: center; gap: 15px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .resource-btn:hover { border-color: #deff9a; background-color: rgba(222, 255, 154, 0.05); transform: translateX(5px); }
+        .resource-btn i { font-size: 22px; width: 30px; text-align: center; }
+        .resource-btn .info { display: flex; flex-direction: column; }
+        .resource-btn .info .title { font-weight: 600; font-size: 15px; }
+        .resource-btn .info .desc { font-size: 12px; color: #64748b; margin-top: 2px; }
+        
+        /* Cores dos ícones */
+        .color-pdf { color: #ef4444; }
+        .color-video { color: #ff0000; }
+        .color-dica { color: #eab308; }
+        .color-forum { color: #10b981; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar-apresentacao">
+    <nav class="navbar-curso">
         <div class="logo-group">
             <i class="fas fa-cube"></i>
-            <span style="color: white; font-weight: bold; font-size: 18px; font-family: 'Urbanist';">PROJETO MINERVA</span>
+            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA</span>
         </div>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <a href="dashboard.html" class="btn-voltar">
-                <i class="fas fa-arrow-left"></i> Painel de Cursos
-            </a>
-            <button class="btn-logout" onclick="window.fazerLogout()">
-                <i class="fas fa-sign-out-alt"></i> Sair
-            </button>
-        </div>
+        <a href="dashboard.html" class="btn-voltar">
+            <i class="fas fa-arrow-left"></i> Voltar ao Painel
+        </a>
     </nav>
 
-    <div class="slider-wrapper" id="slider">
-        <section class="slide" style="text-align: center;">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <i class="fas fa-drone" style="font-size: 70px; color: #deff9a; margin-bottom: 25px;"></i>
-                <h1>Curso de Pilotagem<br>de <span>Drones</span></h1>
-                <p style="font-size: 24px; color: #94a3b8; margin-top: 20px;">Projeto Minerva: Tecnologia Aeroespacial e Operação Segura</p>
-                <p style="margin-top: 50px; font-weight: 700; letter-spacing: 2px; color: white; font-size: 14px;">MÓDULO OPERACIONAL • MULTIROTORES</p>
-            </div>
-        </section>
+    <div class="layout-container">
+        <main class="content-area">
+            <h1>Curso de <span>Pilotagem de Drones</span></h1>
+            <p>Bem-vindo ao ambiente de formação de pilotos de multirotores UAV. Este espaço reúne os conhecimentos sobre aerodinâmica, automação e regras aeroespaciais.</p>
+            
+            <h2>1. Princípio de Estabilização de Sistemas UAV</h2>
+            <p>Drones multirotores mantêm sua estabilidade e executam movimentos alterando a velocidade angular (RPM) de seus motores de forma independente. Esse processamento dinâmico é coordenado por uma unidade central contendo sensores como acelerômetros e giroscópios (IMU).</p>
+            
+            <h2>2. Regulamentação Espacial Civil</h2>
+            <p>Toda operação aérea civil com aeronaves não tripuladas no Brasil deve estar registrada no sistema SISANT da ANAC e necessita de solicitações de voo aprovadas no DECEA (através do sistema SARPAS), respeitando zonas de aproximação de aeródromos.</p>
+        </main>
 
-        <section class="slide" style="text-align: center;">
-            <div style="max-width: 900px; margin: 0 auto;">
-                <h2 class="slide-title" style="border: none; padding: 0; font-size: 52px;">Introdução aos <span>Sistemas UAV</span></h2>
-                <p style="font-size: 28px; color: white; line-height: 1.5; margin-top: 30px;">
-                    Compreender a física de voo de Veículos Aéreos Não Tripulados (UAV) e o papel dos sistemas de posicionamento global na estabilização de aeronaves.
-                </p>
-            </div>
-        </section>
+        <aside class="resources-sidebar">
+            <div class="sidebar-title">Materiais de Apoio</div>
+            
+            <a href="#" target="_blank" class="resource-btn">
+                <i class="fas fa-file-pdf color-pdf"></i>
+                <div class="info">
+                    <span class="title">Legislação e Manuais</span>
+                    <span class="desc">Apostilas DECEA, ANAC e Checklists</span>
+                </div>
+            </a>
 
-        <section class="slide">
-            <h2 class="slide-title">Objetivos do Curso</h2>
-            <div class="two-column">
-                <div class="tile">
-                    <h3><i class="fas fa-shield-halved"></i> Operação Segura e Normas</h3>
-                    <p>Dominar os regulamentos da DECEA e ANAC, mitigando riscos de voo através de checklists pré-voo rigorosos.</p>
+            <a href="#" target="_blank" class="resource-btn">
+                <i class="fab fa-youtube color-video"></i>
+                <div class="info">
+                    <span class="title">Aulas de Operação</span>
+                    <span class="desc">Vídeos práticos de decolagem</span>
                 </div>
-                <div class="tile">
-                    <h3><i class="fas fa-gamepad"></i> Habilidade em Manobras</h3>
-                    <p>Desenvolver memória muscular e controle fino de eixos (Guinada, Arfagem, Rolagem e Potência) tanto em modo manual quanto assistido.</p>
-                </div>
-            </div>
-        </section>
+            </a>
 
-        <section class="slide">
-            <h2 class="slide-title">Princípio Aerodinâmico</h2>
-            <div class="two-column">
-                <div>
-                    <h3 style="color: white; font-size: 28px; margin-bottom: 20px;">Variação de RPM de Motores</h3>
-                    <p>Diferente de helicópteros, drones alteram a velocidade relativa de rotação de motores contra-rotativos para executar curvas, subir ou transladar.</p>
-                </div>
-                <div style="text-align: center;">
-                    <i class="fas fa-wind" style="font-size: 150px; color: rgba(255,255,255,0.05);"></i>
+            <div class="resource-btn" onclick="alert('Dica Operacional: Nunca decole o drone sem estabelecer a trava de satélites (Home Point gravado). Caso aconteça uma falha de sinal, o recurso Return-to-Home falhará!')">
+                <i class="fas fa-lightbulb color-dica"></i>
+                <div class="info">
+                    <span class="title">Segurança de Voo</span>
+                    <span class="desc">Checklist essencial de satélites</span>
                 </div>
             </div>
-        </section>
 
-        <section class="slide">
-            <h2 class="slide-title">Componentes Avançados</h2>
-            <div class="two-column">
-                <div style="text-align: center;">
-                    <i class="fas fa-microchip" style="font-size: 150px; color: #deff9a; opacity: 0.2;"></i>
+            <a href="#" target="_blank" class="resource-btn">
+                <i class="fas fa-comments color-forum"></i>
+                <div class="info">
+                    <span class="title">Fórum dos Pilotos</span>
+                    <span class="desc">Tópicos sobre manutenção e drones</span>
                 </div>
-                <div>
-                    <h3>A Controladora de Voo (FC)</h3>
-                    <p>O cérebro do drone. Processa informações obtidas pelo giroscópio e acelerômetro (IMU) milhares de vezes por segundo para manter a estabilidade no ar.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h2 class="slide-title">Legislação e Espaço Aéreo</h2>
-            <div class="two-column">
-                <div>
-                    <h3>Segurança Jurídica</h3>
-                    <p>Toda operação civil deve respeitar limites de altura (geralmente até 120 metros/400 pés AGL) e distâncias mínimas de segurança de terceiros não anuentes.</p>
-                </div>
-                <div style="text-align: center;">
-                    <i class="fas fa-gavel" style="font-size: 120px; color: rgba(255,255,255,0.05);"></i>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h2 class="slide-title">Plano de Treinamento</h2>
-            <div class="two-column" style="grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                <div class="tile">
-                    <h3 style="color: #deff9a;"><i class="fas fa-desktop"></i> Simulador FPV</h3>
-                    <p>Treino virtual inicial em ambiente controlado para evitar avarias reais em equipamentos durante a curva inicial de aprendizado.</p>
-                </div>
-                <div class="tile">
-                    <h3><i class="fas fa-cloud-sun"></i> Prática de Campo</h3>
-                    <p>Exercícios de decolagem, pouso de precisão e órbitas em cenários reais ao ar livre.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide" style="text-align: center;">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <i class="fas fa-quote-left" style="font-size: 50px; color: #deff9a; opacity: 0.3; margin-bottom: 20px;"></i>
-                <p style="font-size: 32px; font-family: 'Urbanist'; color: white; line-height: 1.4; font-weight: bold;">
-                    "Pilotar um drone de forma técnica exige a precisão de um cirurgião combinada à disciplina de consciência situacional de um piloto comercial."
-                </p>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h2 class="slide-title">Métricas de Prática Segura</h2>
-            <div class="two-column">
-                <div style="text-align: center;">
-                    <span style="font-size: 130px; font-weight: 700; color: #deff9a;">100%</span>
-                    <p style="color: white; font-weight: bold;">Foco em Zero Incidentes</p>
-                </div>
-                <div>
-                    <h3>Filosofia Operacional</h3>
-                    <p>A segurança aérea precede captações de imagem bonitas ou velocidade de voo.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h2 class="slide-title">Modos de Voo Mais Utilizados</h2>
-            <table>
-                <thead>
-                    <tr><th>Modo de Voo</th><th>GPS Ativo</th><th>Comportamento dos Sticks</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Position / GPS</strong></td><td>Sim</td><td style="color: #deff9a;">Drone freia e paira estático ao soltar os comandos</td></tr>
-                    <tr><td><strong>Atti (Altitude Hold)</strong></td><td>Não</td><td style="color: #deff9a;">Mantém altura, mas deriva ao sabor do vento lateral</td></tr>
-                    <tr><td><strong>Acro / Manual</strong></td><td>Não</td><td>Sem assistência eletrônica de nivelamento (Drones FPV)</td></tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section class="slide">
-            <h2 class="slide-title">Tempo de Resposta de Sistemas de Rádio</h2>
-            <div class="chart-row">
-                <div class="chart-label">Protocolos Atuais (ELRS)</div>
-                <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 95%;"></div></div>
-            </div>
-            <div class="chart-row">
-                <div class="chart-label">Sistemas Antigos (PWM)</div>
-                <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 45%;"></div></div>
-            </div>
-        </section>
-
-        <section class="slide" style="text-align: center;">
-            <div style="max-width: 700px; margin: 0 auto;">
-                <h2 style="font-family: 'Urbanist'; font-size: 56px; margin-bottom: 20px;">Bons <span>Voos!</span></h2>
-                <p style="color: white; margin-bottom: 40px;">Você concluiu a visão conceitual do curso de drones. Retorne ao painel para acessar simuladores e materiais em PDF.</p>
-                
-                <a href="dashboard.html" style="background-color: #deff9a; color: #121926; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(222, 255, 154, 0.3);">
-                    Voltar para o Painel de Aulas <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
-                </a>
-            </div>
-        </section>
+            </a>
+        </aside>
     </div>
 
-    <div class="nav-ui">
-        <button class="nav-btn" onclick="voltarSlide()"><i class="fas fa-chevron-left"></i></button>
-        <button class="nav-btn" onclick="avancarSlide()"><i class="fas fa-chevron-right"></i></button>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
-
-    <script>
-        let slideIndex = 0;
-        function avancarSlide() { if (slideIndex < 11) { slideIndex++; mude(); } }
-        function voltarSlide() { if (slideIndex > 0) { slideIndex--; mude(); } }
-        function mude() { document.getElementById('slider').style.transform = `translateX(-${slideIndex * 100}vw)`; }
-        document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') avancarSlide(); if (e.key === 'ArrowLeft') voltarSlide(); });
-    </script>
 </body>
 </html>
