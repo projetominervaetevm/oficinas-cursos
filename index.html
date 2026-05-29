@@ -18,7 +18,7 @@
         <h1 class="login-title">PROJETO <span style="color: #00a3ff;">MINERVA</span></h1>
         
         <div style="margin-bottom: 25px; display: flex; justify-content: center;">
-            <img src="/images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
+            <img src="./images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
         </div>
 
         <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
@@ -30,5 +30,44 @@
         <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
-    </body>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // Configuração do seu Firebase (Mantenha as suas chaves aqui)
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY_AQUI",
+            authDomain: "SEU_AUTH_DOMAIN_AQUI",
+            projectId: "SEU_PROJECT_ID_AQUI",
+            storageBucket: "SEU_STORAGE_BUCKET_AQUI",
+            messagingSenderId: "SEU_MESSAGING_SENDER_ID_AQUI",
+            appId: "SUA_APP_ID_AQUI"
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        // Monitora se o usuário já está logado e joga para o painel
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.href = "dashboard.html";
+            }
+        });
+
+        // Evento de clique para disparar o login do Google
+        document.getElementById('login-btn').addEventListener('click', () => {
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    window.location.href = "dashboard.html";
+                })
+                .catch((error) => {
+                    console.error("Erro no login: ", error);
+                    alert("Erro ao autenticar com o Google: " + error.message);
+                });
+        });
+    </script>
+
+</body>
 </html>
