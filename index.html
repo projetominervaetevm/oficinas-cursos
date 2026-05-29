@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno - Projeto Minerva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121926; /* Azul Escuro do Projeto */
+            color: #f1f5f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background-color: #1a2332;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-icon {
+            font-size: 50px;
+            color: #00a3ff;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'Urbanist', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            color: #00a3ff;
+        }
+
+        p.subtitle {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .btn-google {
+            width: 100%;
+            background-color: #ffffff;
+            color: #1e293b;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-google:hover {
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-google i {
+            font-size: 18px;
+            color: #ea4335; /* Cor vermelha do Google */
+        }
+
+        .footer-text {
+            margin-top: 35px;
+            font-size: 12px;
+            color: #64748b;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <i class="fas fa-cube logo-icon"></i>
+        <h1>PROJETO <span>MINERVA</span></h1>
+        <p class="subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
+        
+        <button class="btn-google" id="btn-login-google">
+            <i class="fab fa-google"></i> Entrar com o Google
+        </button>
+
+        <div class="footer-text">
+            Plataforma Maker • 2026
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Executa o login do Google ao clicar no botão
+        document.getElementById('btn-login-google').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            // Força o Google a sempre pedir para escolher a conta (evita login automático indesejado)
+            provider.setCustomParameters({ prompt: 'select_account' });
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    // O sucesso do login disparará o gatilho automático lá no js/auth.js 
+                    // que fará a checagem com o Google Sheets.
+                    console.log("Autenticado via Google com sucesso:", result.user.email);
+                })
+                .catch((error) => {
+                    console.error("Erro no login do Google:", error);
+                    alert("Falha na autenticação com o Google: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
