@@ -32,16 +32,15 @@
         <aside class="resources-sidebar">
             <div class="sidebar-title">Navegação do Curso</div>
             
-            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo#grid', this)">
+            <button class="resource-btn" onclick="carregarConteudo('https://docs.google.com/viewer?srcid=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo&pid=explorer&efh=false&a=v&chrome=false&embedded=true', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Manuais Técnicos</span>
                     <span class="desc">Guias STL e Perfis do Cura</span>
                 </div>
-                
             </button>
 
-            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_VIDEOS_DO_DRIVE', this)">
+            <button class="resource-btn" onclick="carregarConteudo('ID_DA_PASTA_DE_VIDEOS', this)">
                 <i class="fab fa-youtube color-video"></i>
                 <div class="info">
                     <span class="title">Videoaulas Práticas</span>
@@ -49,7 +48,7 @@
                 </div>
             </button>
 
-            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=ID_DA_PASTA_DE_DICAS_DO_DRIVE', this)">
+            <button class="resource-btn" onclick="carregarConteudo('ID_DA_PASTA_DE_DICAS', this)">
                 <i class="fas fa-lightbulb color-dica"></i>
                 <div class="info">
                     <span class="title">Dicas e Macetes</span>
@@ -57,7 +56,7 @@
                 </div>
             </button>
 
-            <button class="resource-btn" onclick="carregarConteudo('COLOQUE_AQUI_O_LINK_DO_SEU_FORUM_OU_PLANILHA', this)">
+            <button class="resource-btn" onclick="carregarConteudo('LINK_DO_FORUM', this)">
                 <i class="fas fa-comments color-forum"></i>
                 <div class="info">
                     <span class="title">Fórum da Comunidade</span>
@@ -68,13 +67,16 @@
     </div>
 
     <script>
-        // Controla a troca de conteúdo do Iframe mantendo o destaque visual do botão ativo
         function carregarConteudo(url, elemento) {
+            // Se o link inserido for o padrão do Drive de pastas, avisa o desenvolvedor para ajustar o formato
+            if(url.includes('drive.google.com/drive/folders')) {
+                alert('Atenção: Use o formato de visualização incorporada para evitar o bloqueio do Google.');
+                return;
+            }
             document.getElementById('conteudo-frame').src = url;
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
             elemento.classList.add('active');
         }
     </script>
 </body>
-</html>
 </html>
