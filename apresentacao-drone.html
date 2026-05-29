@@ -9,63 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif; background-color: #121926; color: #f1f5f9;
-            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-        }
-        
-        /* Navbar Superior */
-        .navbar-curso {
-            background-color: #1a2332; height: 70px; min-height: 70px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 30px; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .logo-group { display: flex; align-items: center; gap: 12px; }
-        .logo-group .fa-cube { color: #deff9a; font-size: 22px; }
-        .btn-voltar {
-            background: #deff9a; color: #121926; text-decoration: none; padding: 8px 16px;
-            border-radius: 6px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
-        }
-        .btn-voltar:hover { background-color: #c5e680; }
+ 
+    <link rel="stylesheet" href="css/estilos.css">
 
-        /* Estrutura do Curso (Duas Colunas) */
-        .layout-container { display: flex; flex-grow: 1; overflow: hidden; }
-        
-        /* Coluna da Esquerda: Conteúdo Técnico Didático */
-        .content-area { flex-grow: 1; padding: 50px; overflow-y: auto; line-height: 1.7; }
-        .content-area h1 { font-family: 'Urbanist', sans-serif; font-size: 38px; margin-bottom: 15px; }
-        .content-area h1 span { color: #deff9a; }
-        .content-area h2 { font-family: 'Urbanist', sans-serif; font-size: 24px; margin: 35px 0 15px 0; color: #deff9a; }
-        .content-area p { color: #94a3b8; font-size: 16px; margin-bottom: 20px; }
-        
-        /* Coluna da Direita: Painel de Recursos */
-        .resources-sidebar {
-            width: 380px; min-width: 380px; background-color: #1a2332;
-            border-left: 1px solid rgba(255,255,255,0.05); padding: 30px;
-            display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
-        }
-        .sidebar-title { font-family: 'Urbanist', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 10px; }
-        
-        /* Botões Técnicos de Recursos */
-        .resource-btn {
-            background-color: #121926; border: 1px solid rgba(255,255,255,0.05);
-            padding: 18px; border-radius: 12px; color: white; text-decoration: none;
-            display: flex; align-items: center; gap: 15px; transition: all 0.2s ease; cursor: pointer;
-        }
-        .resource-btn:hover { border-color: #deff9a; background-color: rgba(222, 255, 154, 0.05); transform: translateX(5px); }
-        .resource-btn i { font-size: 22px; width: 30px; text-align: center; }
-        .resource-btn .info { display: flex; flex-direction: column; }
-        .resource-btn .info .title { font-weight: 600; font-size: 15px; }
-        .resource-btn .info .desc { font-size: 12px; color: #64748b; margin-top: 2px; }
-        
-        /* Cores dos ícones */
-        .color-pdf { color: #ef4444; }
-        .color-video { color: #ff0000; }
-        .color-dica { color: #eab308; }
-        .color-forum { color: #10b981; }
-    </style>
 </head>
 <body>
 
