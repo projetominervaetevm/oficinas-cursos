@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficina de Impressão 3D - Projeto Minerva</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
@@ -25,14 +25,14 @@
 
     <div class="layout-container">
         <main class="content-frame-area">
-            <!-- CORREÇÃO: Adicionado sandbox e allow para compatibilidade e segurança -->
-            <iframe id="conteudo-frame" src="./inicio-3d.html" allow="autoplay" sandbox="allow-scripts "></iframe id="conteudo-frame">
+            <!-- Iframe limpo para receber os links compartilhados -->
+            <iframe id="conteudo-frame" src="./inicio-3d.html" allow="autoplay"></iframe>
         </main>
 
         <aside class="resources-sidebar">
             <div class="sidebar-title">Navegação do Curso</div>
             
-            <!-- CORREÇÃO: Nova estrutura oficial de URL de pastas do Google Drive -->
+            <!-- Primeiro botão ajustado com o seu ID real da pasta de Manuais -->
             <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/drive/folders/1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo?usp=drive_link', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
@@ -41,6 +41,7 @@
                 </div>
             </button>
 
+            <!-- Botão de Vídeos (Substitua ID_DA_PASTA_DE_VIDEOS pelo ID da sua outra pasta) -->
             <button class="resource-btn" onclick="carregarConteudo('https://google.com', this)">
                 <i class="fab fa-youtube color-video"></i>
                 <div class="info">
@@ -49,6 +50,7 @@
                 </div>
             </button>
 
+            <!-- Botão de Dicas (Substitua ID_DA_PASTA_DE_DICAS pelo ID da sua outra pasta) -->
             <button class="resource-btn" onclick="carregarConteudo('https://google.com', this)">
                 <i class="fas fa-lightbulb color-dica"></i>
                 <div class="info">
@@ -57,6 +59,7 @@
                 </div>
             </button>
 
+            <!-- Botão do Fórum -->
             <button class="resource-btn" onclick="carregarConteudo('LINK_DO_FORUM', this)">
                 <i class="fas fa-comments color-forum"></i>
                 <div class="info">
@@ -69,19 +72,14 @@
 
     <script>
         function carregarConteudo(url, elemento) {
-            // CORREÇÃO: Validação inteligente para alertar se colarem o link errado por engano
-            if(url.includes('drive.google.com') && !url.includes('embeddedfolderview')) {
-                alert('Atenção: Use o formato "embeddedfolderview?id=..." para evitar o bloqueio do Google.');
-                return;
-            }
+            // Código simplificado: atualiza o iframe diretamente sem travar a tela com alertas
+            document.getElementById('conteudo-frame').src = url;
 
-            const iframe = document.getElementById('conteudo-frame');
-            iframe.src = url;
-
-            // Gerenciamento de classe ativa (Excelente lógica sua!)
+            // Altera visualmente o botão selecionado
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
             elemento.classList.add('active');
         }
     </script>
 </body>
 </html>
+
