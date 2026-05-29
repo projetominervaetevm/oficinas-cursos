@@ -32,7 +32,7 @@
         <aside class="resources-sidebar">
             <div class="sidebar-title">Navegação do Curso</div>
             
-            <button class="resource-btn active" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo', this)">
+            <button class="resource-btn" onclick="carregarConteudo('https://drive.google.com/embeddedfolder/id?id=1KdrwBDiYi-5QUcLWu5vXEiPFwEM9jwyo', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Manuais Técnicos</span>
@@ -67,6 +67,7 @@
     </div>
 
     <script>
+        // Controla a troca de conteúdo do Iframe mantendo o destaque visual do botão ativo
         function carregarConteudo(url, elemento) {
             document.getElementById('conteudo-frame').src = url;
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
@@ -74,4 +75,5 @@
         }
     </script>
 </body>
+</html>
 </html>
