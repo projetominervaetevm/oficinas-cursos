@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficina Impressão 3D - Projeto Minerva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #121926;
+            font-family: 'Inter', sans-serif; color: #f1f5f9;
+        }
+        
+        /* Navbar Fixa Superior */
+        .navbar-apresentacao {
+            background-color: #1a2332; height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px; position: fixed; top: 0; width: 100%; z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05); box-sizing: border-box;
+        }
+        .logo-group { display: flex; align-items: center; gap: 15px; }
+        .logo-group .fa-cube { color: #00a3ff; font-size: 24px; }
+        
+        .btn-voltar {
+            background: #00a3ff; color: white; text-decoration: none; 
+            padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 14px; 
+            transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-voltar:hover { background-color: #008be0; }
+
+        .btn-logout {
+            background: transparent; border: 1px solid #ef4444; color: #ef4444;
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .btn-logout:hover { background: #ef4444; color: white; }
+
+        /* Estrutura de Slides */
+        .slider-wrapper {
+            display: flex; width: 1200vw; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .slide {
+            width: 100vw; height: 100vh; flex-shrink: 0;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 100px 10% 40px 10%; box-sizing: border-box;
+        }
+        .slide h1 { font-family: 'Urbanist', sans-serif; font-size: 64px; line-height: 1.1; margin-bottom: 20px; }
+        .slide h1 span { color: #00a3ff; }
+        .slide-title { font-family: 'Urbanist', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 40px; border-left: 5px solid #00a3ff; padding-left: 20px; }
+        .slide p { font-size: 18px; line-height: 1.6; color: #94a3b8; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .tile { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tile h3 { color: #00a3ff; font-size: 22px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.02); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 18px; text-align: left; }
+        th { background-color: rgba(0, 163, 255, 0.1); color: white; border-bottom: 2px solid #00a3ff; }
+        td { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        
+        .chart-row { display: flex; align-items: center; gap: 25px; margin-bottom: 20px; }
+        .chart-label { width: 200px; text-align: right; font-weight: 600; }
+        .chart-bar-bg { flex-grow: 1; height: 24px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; }
+        .chart-bar-fill { height: 100%; background: linear-gradient(90deg, #00a3ff, #deff9a); border-radius: 12px; }
+        
+        /* Interface de Navegação */
+        .nav-ui { position: fixed; bottom: 40px; right: 40px; display: flex; gap: 15px; z-index: 10000; }
+        .nav-btn {
+            width: 55px; height: 55px; border-radius: 50%; background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.2s ease;
+        }
+        .nav-btn:hover { background: #00a3ff; border-color: #00a3ff; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar-apresentacao">
+        <div class="logo-group">
+            <i class="fas fa-cube"></i>
+            <span style="color: white; font-weight: bold; font-size: 18px; font-family: 'Urbanist';">PROJETO MINERVA</span>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="dashboard.html" class="btn-voltar">
+                <i class="fas fa-arrow-left"></i> Painel de Cursos
+            </a>
+            <button class="btn-logout" onclick="window.fazerLogout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </nav>
+
+    <div class="slider-wrapper" id="slider">
+        <section class="slide" style="text-align: center;">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <i class="fas fa-cube" style="font-size: 70px; color: #00a3ff; margin-bottom: 25px;"></i>
+                <h1>Oficina de <br><span>Impressão 3D</span></h1>
+                <p style="font-size: 24px; color: #94a3b8; margin-top: 20px;">Projeto Minerva: Transformando Ideias em Realidade</p>
+                <p style="margin-top: 50px; font-weight: 700; letter-spacing: 2px; color: white; font-size: 14px;">MÓDULO TÉCNICO • MANUFATURA ADITIVA</p>
+            </div>
+        </section>
+
+        <section class="slide" style="text-align: center;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 class="slide-title" style="border: none; padding: 0; font-size: 52px;">Visão <span>Estratégica</span></h2>
+                <p style="font-size: 28px; color: white; line-height: 1.5; margin-top: 30px;">
+                    Democratizando o acesso à fabricação digital através de uma plataforma integrada de conteúdo prático, modelagem e comunidade maker.
+                </p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Objetivos da Oficina</h2>
+            <div class="two-column">
+                <div class="tile">
+                    <h3><i class="fas fa-microchip"></i> Educação Maker</h3>
+                    <p>Capacitar alunos no ecossistema completo de manufatura aditiva, dominando desde a calibração física até o fatiamento lógico.</p>
+                </div>
+                <div class="tile">
+                    <h3><i class="fas fa-layer-group"></i> Repositório de Modelos</h3>
+                    <p>Centralizar arquivos digitais (STL/OBJ), documentações de suporte técnico e projetos criados pela própria comunidade da oficina.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Fluxo de Trabalho: Do Bits ao Átomo</h2>
+            <div class="two-column">
+                <div>
+                    <h3 style="color: white; font-size: 28px; margin-bottom: 20px;">Modelagem e Conceito</h3>
+                    <p>Utilização de ambientes CAD como <strong>Tinkercad e Fusion 360</strong> para materializar conceitos tridimensionais, respeitando as restrições físicas de engenharia do material.</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-laptop-code" style="font-size: 150px; color: rgba(255,255,255,0.05);"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Tecnologia em Foco</h2>
+            <div class="two-column">
+                <div style="text-align: center;">
+                    <i class="fas fa-layer-group" style="font-size: 150px; color: #00a3ff; opacity: 0.2;"></i>
+                </div>
+                <div>
+                    <h3>Manufatura Aditiva FDM</h3>
+                    <p>Foco na tecnologia de Modelagem por Deposição Fundida (FDM). Entendimento dinâmico de extrusão, zonas de aquecimento e comportamento de polímeros termoplásticos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Espaço de Colaboração</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Ambiente de Resolução de Problemas</h3>
+                    <p>A cultura maker baseia-se na iteração contínua. Erros de impressão (como "linhas fantasmas" ou subextrusão) são tratados como oportunidades analíticas de calibração.</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-users" style="font-size: 120px; color: rgba(255,255,255,0.05);"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Ecossistema de Aprendizado</h2>
+            <div class="two-column" style="grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div class="tile">
+                    <h3 style="color: #ff0000;"><i class="fab fa-youtube"></i> Laboratório Digital</h3>
+                    <p>Acesso completo a videoaulas com demonstrações práticas das impressoras operando em tempo real.</p>
+                </div>
+                <div class="tile">
+                    <h3><i class="fas fa-file-pdf"></i> Manuais e Perfis</h3>
+                    <p>Biblioteca centralizada com perfis de fatiamento otimizados (Cura/PrusaSlicer) e guias técnicos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" style="text-align: center;">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <i class="fas fa-quote-left" style="font-size: 50px; color: #00a3ff; opacity: 0.3; margin-bottom: 20px;"></i>
+                <p style="font-size: 32px; font-family: 'Urbanist'; color: white; line-height: 1.4; font-weight: bold;">
+                    "A impressão 3D não enxerga a complexidade geométrica como uma barreira de custo, tornando a manufatura ágil acessível a qualquer mente criativa."
+                </p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Métricas de Aproveitamento</h2>
+            <div class="two-column">
+                <div style="text-align: center;">
+                    <span style="font-size: 130px; font-weight: 700; color: #00a3ff;">95%</span>
+                    <p style="color: white; font-weight: bold;">Índice de Sucesso em Peças Finais</p>
+                </div>
+                <div>
+                    <h3>Metas do Projeto</h3>
+                    <p>Alcançar alta fidelidade dimensional, minimizando o desperdício de filamento por meio de parametrização correta.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Matriz Comparativa de Filamentos</h2>
+            <table>
+                <thead>
+                    <tr><th>Material</th><th>Temperatura Extrusão</th><th>Resistência Mecânica</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>PLA</strong></td><td>190°C - 220°C</td><td style="color: #deff9a;">Alta Rigidez (Ideal para Protótipos)</td></tr>
+                    <tr><td><strong>PETG</strong></td><td>230°C - 250°C</td><td style="color: #deff9a;">Excelente Tenacidade e Resistência UV</td></tr>
+                    <tr><td><strong>ABS</strong></td><td>240°C - 260°C</td><td>Alta Resistência Térmica (Requer Cúpula)</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="slide">
+            <h2 class="slide-title">Distribuição de Aplicações Técnicas</h2>
+            <div class="chart-row">
+                <div class="chart-label">Prototipagem Rápida</div>
+                <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 90%;"></div></div>
+            </div>
+            <div class="chart-row">
+                <div class="chart-label">Peças de Substituição</div>
+                <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 75%;"></div></div>
+            </div>
+        </section>
+
+        <section class="slide" style="text-align: center;">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-family: 'Urbanist'; font-size: 56px; margin-bottom: 20px;">Pronto para <span>Começar?</span></h2>
+                <p style="color: white; margin-bottom: 40px;">Explore os módulos práticos, baixe os STLs e inicie seus fatiamentos no painel principal.</p>
+                
+                <a href="dashboard.html" style="background-color: #00a3ff; color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(0, 163, 255, 0.4);">
+                    Voltar para o Painel de Aulas <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <div class="nav-ui">
+        <button class="nav-btn" onclick="voltarSlide()"><i class="fas fa-chevron-left"></i></button>
+        <button class="nav-btn" onclick="avancarSlide()"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        let slideIndex = 0;
+        function avancarSlide() { if (slideIndex < 11) { slideIndex++; mude(); } }
+        function voltarSlide() { if (slideIndex > 0) { slideIndex--; mude(); } }
+        function mude() { document.getElementById('slider').style.transform = `translateX(-${slideIndex * 100}vw)`; }
+        document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') avancarSlide(); if (e.key === 'ArrowLeft') voltarSlide(); });
+    </script>
+</body>
+</html>
