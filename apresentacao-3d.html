@@ -6,20 +6,18 @@
     <title>Oficina de Impressão 3D - Projeto Minerva</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-
-
     <link rel="stylesheet" href="css/estilos.css">
-
 </head>
 <body>
 
     <nav class="navbar-curso">
         <div class="logo-group">
             <i class="fas fa-cube"></i>
-            <span style="color: white; font-weight: bold; font-family: 'Urbanist';">PROJETO MINERVA • IMPRESSÃO 3D</span>
+            <span>PROJETO MINERVA</span>
+            <img src="Design sem nome.png" alt="Logo Parceria" class="logo-parceria">
         </div>
         <a href="dashboard.html" class="btn-voltar">
             <i class="fas fa-arrow-left"></i> Voltar ao Painel
@@ -69,11 +67,8 @@
     </div>
 
     <script>
-        // Função que altera o link do frame sem recarregar a página inteira
         function carregarConteudo(url, elemento) {
             document.getElementById('conteudo-frame').src = url;
-            
-            // Remove a classe ativa de todos os botões e adiciona no clicado
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
             elemento.classList.add('active');
         }
