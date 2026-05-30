@@ -8,66 +8,71 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="./css/estilos.css">
 </head>
 <body>
+ <div class="login-container">
+ <i class="fas fa-cube"></i>
+ <h1 class="login-title">PROJETO <span style="color: #00a3ff;">MINERVA</span></h1>
+ <div style="margin-bottom: 25px; display: flex; justify-content: center;">
+ <img src="./images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
+ </div>
+ <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
+ <button class="btn-google" id="login-btn">
+ <i class="fab fa-google" style="color: #ea4335;"></i> Entrar com o Google
+ </button>
+ <div class="login-footer">Plataforma Maker • 2026</div>
+ </div>
 
-    <div class="login-container">
-        <i class="fas fa-cube"></i>
-        <h1 class="login-title">PROJETO <span style="color: #00a3ff;">MINERVA</span></h1>
-        
-        <div style="margin-bottom: 25px; display: flex; justify-content: center;">
-            <img src="./images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
-        </div>
+ <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+ <script>
+ // Configuração do seu Firebase
+ const firebaseConfig = {
+ apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
+ authDomain: "oficina-3d-minerva.firebaseapp.com",
+ projectId: "oficina-3d-minerva",
+ storageBucket: "oficina-3d-minerva.firebasestorage.app",
+ messagingSenderId: "241260901502",
+ appId: "1:241260901502:web:63fb6e57a446eea876142f",
+ };
 
-        <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
-        
-        <button class="btn-google" id="login-btn">
-            <i class="fab fa-google" style="color: #ea4335;"></i> Entrar com o Google
-        </button>
-        
-        <div class="login-footer">Plataforma Maker • 2026</div>
-    </div>
+ // Inicializa o Firebase
+ firebase.initializeApp(firebaseConfig);
+ const auth = firebase.auth();
+ const provider = new firebase.auth.GoogleAuthProvider();
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+ // Monitora o estado de autenticação
+ auth.onAuthStateChanged(user => {
+ if (user) {
+ // CORREÇÃO: Garante que os dados estão salvos caso o usuário volte à página já logado
+ localStorage.setItem('usuario_nome', user.displayName);
+ localStorage.setItem('usuario_email', user.email);
+ localStorage.setItem('usuario_foto', user.photoURL);
+ window.location.href = "dashboard.html";
+ }
+ });
 
-    <script>
-        // Configuração do seu Firebase (Mantenha as suas chaves aqui)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
-            authDomain: "oficina-3d-minerva.firebaseapp.com",
-            projectId: "oficina-3d-minerva",
-            storageBucket: "oficina-3d-minerva.firebasestorage.app",
-            messagingSenderId: "241260901502",
-            appId: "1:241260901502:web:63fb6e57a446eea876142f",
-        };
+ // Evento de clique para disparar o login do Google
+ document.getElementById('login-btn').addEventListener('click', () => {
+ auth.signInWithPopup(provider)
+ .then((result) => {
+ const user = result.user;
+ 
+ // NOVIDADE: Armazena o Nome, E-mail e Foto localmente para usar nas checagens e no painel
+ localStorage.setItem('usuario_nome', user.displayName);
+ localStorage.setItem('usuario_email', user.email);
+ localStorage.setItem('usuario_foto', user.photoURL);
 
-        // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
-
-        // Monitora se o usuário já está logado e joga para o painel
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                window.location.href = "dashboard.html";
-            }
-        });
-
-        // Evento de clique para disparar o login do Google
-        document.getElementById('login-btn').addEventListener('click', () => {
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    window.location.href = "dashboard.html";
-                })
-                .catch((error) => {
-                    console.error("Erro no login: ", error);
-                    alert("Erro ao autenticar com o Google: " + error.message);
-                });
-        });
-    </script>
-
+ window.location.href = "dashboard.html";
+ })
+ .catch((error) => {
+ console.error("Erro no login: ", error);
+ alert("Erro ao autenticar com o Google: " + error.message);
+ });
+ });
+ </script>
 </body>
+</html>
+
 </html>
