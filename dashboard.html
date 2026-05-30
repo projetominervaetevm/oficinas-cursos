@@ -1,44 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Aluno - Projeto Minerva</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: #121926; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
-        .navbar { background-color: #1a2332; height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area .fa-cube { color: #00a3ff; font-size: 24px; }
-        .logo-area span { font-family: 'Urbanist', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px; color: white; }
-        .logo-parceria { height: 42px; width: auto; padding-left: 15px; border-left: 2px solid rgba(255, 255, 255, 0.15); margin-left: 5px; }
-        .user-area { display: flex; align-items: center; gap: 20px; }
-        .user-greeting { font-size: 14px; color: #94a3b8; }
-        .user-greeting strong { color: white; }
-        .btn-logout { background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; cursor: pointer; }
-        .btn-logout:hover { background-color: #ef4444; border-color: #ef4444; }
-        .dashboard-content { flex-grow: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 40px 20px; }
-        .welcome-header { margin-bottom: 35px; }
-        .welcome-header h2 { font-family: 'Urbanist', sans-serif; font-size: 32px; font-weight: 800; }
-        .welcome-header h2 span { color: #00a3ff; }
-        .welcome-header p { color: #64748b; font-size: 15px; margin-top: 5px; }
-        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
-        .course-card { background-color: #1a2332; border-radius: 16px; overflow: hidden; text-decoration: none; color: white; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; position: relative; transition: transform 0.2s ease, border-color 0.2s ease; }
-        .course-card:hover { transform: translateY(-4px); border-color: rgba(0, 163, 255, 0.3); }
-        .card-image { height: 180px; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #121926; }
-        .card-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; gap: 12px; }
-        .badge { align-self: flex-start; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; background: rgba(0, 163, 255, 0.1); color: #00a3ff; }
-        .card-info h3 { font-family: 'Urbanist', sans-serif; font-size: 20px; font-weight: 700; }
-        .card-info p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
-        .course-card.locked-click { pointer-events: none; }
-        .lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 25, 38, 0.85); backdrop-filter: blur(4px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 10; }
-        .lock-overlay i { font-size: 32px; color: #64748b; }
-        .lock-overlay span { font-family: 'Urbanist', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
-    </style> 
+    
+    <link rel="stylesheet" href="./css/estilos.css">
 </head> 
 <body> 
     <nav class="navbar"> 
@@ -48,7 +22,6 @@
             <img src="images/logominerva.png" alt="Minerva" class="logo-parceria"> 
         </div> 
         <div class="user-area"> 
-            <!-- MELHORIA: O nome agora carrega sem "piscar" puxando do localStorage instantaneamente -->
             <div class="user-greeting">Olá, <strong id="aluno-nome">Aluno Maker</strong></div> 
             <button class="btn-logout" onclick="window.fazerLogout()"> 
                 <i class="fas fa-sign-out-alt"></i> Sair 
@@ -91,10 +64,23 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script> 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script> 
-    <script src="js/firebase-config.js"></script> 
-    <script src="js/auth.js"></script> 
+    
     <script> 
-    // Segurança Avançada: Se não houver e-mail ou permissões salvas, expulsa para a tela de login na hora
+    // Configurações do Firebase embutidas para centralizar a execução e evitar falha de import
+    const firebaseConfig = {
+        apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
+        authDomain: "oficina-3d-minerva.firebaseapp.com",
+        projectId: "oficina-3d-minerva",
+        storageBucket: "oficina-3d-minerva.firebasestorage.app",
+        messagingSenderId: "241260901502",
+        appId: "1:241260901502:web:63fb6e57a446eea876142f",
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    // Segurança Avançada: Bloqueio preventivo local
     const emailProtecao = localStorage.getItem('usuario_email');
     const permsProtecao = localStorage.getItem('permissoes_minerva');
     if (!emailProtecao || !permsProtecao) {
@@ -110,7 +96,7 @@
     function aplicarPermissoesPainel() { 
         const permsRaw = localStorage.getItem("permissoes_minerva"); 
         if (!permsRaw) { 
-            window.location.href = "index.html"; // Expulsa se tentarem burlar
+            window.location.href = "index.html";
             return; 
         } 
         
@@ -120,21 +106,21 @@
         const cardDrone = document.getElementById("card-drone"); 
         const overlayDrone = document.getElementById("overlay-drone"); 
 
-        // Validação estrita do Card de Impressão 3D
-        if (permissoes.impressao3D === true) { 
-            card3D.classList.remove("locked", "locked-click"); 
+        // Validação do Card de Impressão 3D
+        if (permissoes.impressao3D === true || permissoes.impressao3d === true) { 
+            card3D.classList.remove("locked-click"); 
             overlay3D.style.display = "none"; 
         } else { 
-            card3D.classList.add("locked", "locked-click"); 
+            card3D.classList.add("locked-click"); 
             overlay3D.style.display = "flex"; 
         } 
 
-        // Validação estrita do Card de Drones
+        // Validação do Card de Drones
         if (permissoes.drone === true) { 
-            cardDrone.classList.remove("locked", "locked-click"); 
+            cardDrone.classList.remove("locked-click"); 
             overlayDrone.style.display = "none"; 
         } else { 
-            cardDrone.classList.add("locked", "locked-click"); 
+            cardDrone.classList.add("locked-click"); 
             overlayDrone.style.display = "flex"; 
         } 
     } 
@@ -145,7 +131,6 @@
             document.getElementById("aluno-nome").innerText = nomeExibicao; 
             aplicarPermissoesPainel(); 
         } else {
-            // Se o Firebase deslogar, limpa o navegador e joga pro login
             localStorage.clear();
             window.location.href = "index.html";
         }
@@ -161,10 +146,5 @@
 
     window.addEventListener('DOMContentLoaded', aplicarPermissoesPainel); 
 </script>
-
-          
-      
 </body> 
-</html>
-
 </html>
