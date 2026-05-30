@@ -94,54 +94,76 @@
     <script src="js/firebase-config.js"></script> 
     <script src="js/auth.js"></script> 
     <script> 
-        // Puxa o nome salvo no login imediatamente para evitar o texto original "Aluno" sumir do nada
-        const nomeSalvo = localStorage.getItem('usuario_nome');
-        if (nomeSalvo) {
-            document.getElementById("aluno-nome").innerText = nomeSalvo;
-        }
+    // Segurança Avançada: Se não houver e-mail ou permissões salvas, expulsa para a tela de login na hora
+    const emailProtecao = localStorage.getItem('usuario_email');
+    const permsProtecao = localStorage.getItem('permissoes_minerva');
+    if (!emailProtecao || !permsProtecao) {
+        window.location.href = "index.html";
+    }
 
-        function aplicarPermissoesPainel() { 
-            const permsRaw = localStorage.getItem("permissoes_minerva"); 
-            if (!permsRaw) { 
-                console.log("Nenhuma permissão local encontrada. Aguardando validação..."); 
-                return; 
-            } 
-            const permissoes = JSON.parse(permsRaw); 
-            const card3D = document.getElementById("card-3d"); 
-            const overlay3D = document.getElementById("overlay-3d"); 
-            const cardDrone = document.getElementById("card-drone"); 
-            const overlayDrone = document.getElementById("overlay-drone"); 
+    // Exibe o nome do aluno de forma instantânea sem delay
+    const nomeSalvo = localStorage.getItem('usuario_nome');
+    if (nomeSalvo) {
+        document.getElementById("aluno-nome").innerText = nomeSalvo;
+    }
 
-            // Tratamento do Card de Impressão 3D
-            if (permissoes.impressao3D === true) { 
-                card3D.classList.remove("locked", "locked-click"); 
-                overlay3D.style.display = "none"; 
-            } else { 
-                card3D.classList.add("locked", "locked-click"); 
-                overlay3D.style.display = "flex"; 
-            } 
+    function aplicarPermissoesPainel() { 
+        const permsRaw = localStorage.getItem("permissoes_minerva"); 
+        if (!permsRaw) { 
+            window.location.href = "index.html"; // Expulsa se tentarem burlar
+            return; 
+        } 
+        
+        const permissoes = JSON.parse(permsRaw); 
+        const card3D = document.getElementById("card-3d"); 
+        const overlay3D = document.getElementById("overlay-3d"); 
+        const cardDrone = document.getElementById("card-drone"); 
+        const overlayDrone = document.getElementById("overlay-drone"); 
 
-            // CORREÇÃO DO BUG: Corrigido o comportamento do card de Drones para sumir com o cadeado quando liberado
-            if (permissoes.drone === true) { 
-                cardDrone.classList.remove("locked", "locked-click"); 
-                overlayDrone.style.display = "none"; 
-            } else { 
-                cardDrone.classList.add("locked", "locked-click"); 
-                overlayDrone.style.display = "flex"; 
-            } 
+        // Validação estrita do Card de Impressão 3D
+        if (permissoes.impressao3D === true) { 
+            card3D.classList.remove("locked", "locked-click"); 
+            overlay3D.style.display = "none"; 
+        } else { 
+            card3D.classList.add("locked", "locked-click"); 
+            overlay3D.style.display = "flex"; 
         } 
 
-        firebase.auth().onAuthStateChanged((user) => { 
-            if (user) { 
-                const nomeExibicao = user.displayName || user.email.split('@')[0];
-                document.getElementById("aluno-nome").innerText = nomeExibicao; 
-                localStorage.setItem('usuario_nome', nomeExibicao); // Atualiza caso mude na conta Google
-                aplicarPermissoesPainel(); 
-            } 
-        }); 
+        // Validação estrita do Card de Drones
+        if (permissoes.drone === true) { 
+            cardDrone.classList.remove("locked", "locked-click"); 
+            overlayDrone.style.display = "none"; 
+        } else { 
+            cardDrone.classList.add("locked", "locked-click"); 
+            overlayDrone.style.display = "flex"; 
+        } 
+    } 
 
-        window.addEventListener('DOMContentLoaded', aplicarPermissoesPainel); 
-    </script> 
+    firebase.auth().onAuthStateChanged((user) => { 
+        if (user) { 
+            const nomeExibicao = user.displayName || user.email.split('@')[0];
+            document.getElementById("aluno-nome").innerText = nomeExibicao; 
+            aplicarPermissoesPainel(); 
+        } else {
+            // Se o Firebase deslogar, limpa o navegador e joga pro login
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    }); 
+
+    // Função global de logout vinculada ao botão "Sair"
+    window.fazerLogout = function() {
+        firebase.auth().signOut().then(() => {
+            localStorage.clear();
+            window.location.href = "index.html";
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', aplicarPermissoesPainel); 
+</script>
+
+          
+      
 </body> 
 </html>
 
