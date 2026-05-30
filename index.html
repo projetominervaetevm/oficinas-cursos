@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Projeto Minerva</title>
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="./css/estilos.css">
 </head>
 <body>
@@ -31,26 +31,24 @@
         <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
-    <!-- Carregamento das bibliotecas do Firebase v10 em modo de compatibilidade -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
-            authDomain: "://firebaseapp.com",
+            authDomain: "oficina-3d-minerva.firebaseapp.com", // Domínio corrigido e seguro
             projectId: "oficina-3d-minerva",
             storageBucket: "oficina-3d-minerva.firebasestorage.app",
             messagingSenderId: "241260901502",
             appId: "1:241260901502:web:63fb6e57a446eea876142f",
         };
 
-        // CORREÇÃO: Inicialização usando o padrão estrito do objeto global para a versão compat
+        // Inicialização estrita usando as dependências globais
         const app = window.firebase.initializeApp(firebaseConfig);
         const auth = window.firebase.auth();
         const provider = new window.firebase.auth.GoogleAuthProvider();
 
-        // O seu link atualizado do Apps Script Web App
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8u90Sq-JP1-iKfl4Z9C-uP8-i8dB_5jdBSHQ7TLkV25ENSfK3t0xnca70F2njPaoDcw/exec';
 
         async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
