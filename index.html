@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -30,6 +31,7 @@
         <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
+    <!-- Carregamento das bibliotecas do Firebase v10 em modo de compatibilidade -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     
@@ -43,11 +45,13 @@
             appId: "1:241260901502:web:63fb6e57a446eea876142f",
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
+        // CORREÇÃO: Inicialização usando o padrão estrito do objeto global para a versão compat
+        const app = window.firebase.initializeApp(firebaseConfig);
+        const auth = window.firebase.auth();
+        const provider = new window.firebase.auth.GoogleAuthProvider();
 
-        const APPS_SCRIPT_URL = 'https://google.com';
+        // O seu link atualizado do Apps Script Web App
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8u90Sq-JP1-iKfl4Z9C-uP8-i8dB_5jdBSHQ7TLkV25ENSfK3t0xnca70F2njPaoDcw/exec';
 
         async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
             const statusTxt = document.getElementById('status-validacao');
@@ -57,7 +61,6 @@
                 statusTxt.innerText = "Verificando permissões na base da FAETEC...";
             }
 
-            // CORREÇÃO: Adicionado o [0] para converter o split em string pura e evitar erros
             let nomeAluno = "Aluno";
             if (displayName) {
                 nomeAluno = displayName;
@@ -104,7 +107,6 @@
             }
         });
 
-        // Evento de clique isolado e limpo para garantir o funcionamento do botão
         document.getElementById('login-btn').addEventListener('click', function() {
             auth.signInWithPopup(provider)
                 .then(function(result) {
