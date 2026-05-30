@@ -1,107 +1,164 @@
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
-        authDomain: "://firebaseapp.com",
-        projectId: "oficina-3d-minerva",
-        storageBucket: "oficina-3d-minerva.firebasestorage.app",
-        messagingSenderId: "241260901502",
-        appId: "1:241260901502:web:63fb6e57a446eea876142f",
-    };
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Projeto Minerva</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+<body>
+    <div class="login-container">
+        <i class="fas fa-cube"></i>
+        <h1 class="login-title">PROJETO <span style="color: #00a3ff;">MINERVA</span></h1>
+        
+        <div style="margin-bottom: 25px; display: flex; justify-content: center;">
+            <img src="./images/logominerva.png" alt="Logo Parceria FAETEC ETEVM" style="height: 50px; width: auto;">
+        </div>
+        
+        <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
+        
+        <!-- Área de status onde aparecem as mensagens de validação da planilha -->
+        <p id="status-validacao" style="color: #ffb703; font-weight: 600; display: none; margin-bottom: 20px; font-size: 14px; line-height: 1.4; text-align: center; max-width: 320px;"></p>
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
+        <button class="btn-google" id="login-btn">
+            <i class="fab fa-google" style="color: #ea4335;"></i> Entrar com o Google
+        </button>
+        
+        <div class="login-footer">Plataforma Maker • 2026</div>
+    </div>
 
-    // CONFIGURAÇÃO REAL DA SUA PLANILHA (Baseado na imagem enviada)
-    const SPREADSHEET_ID = 'AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp';
-    const GOOGLE_API_KEY = 'https://script.google.com/macros/s/AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp/exec'; 
-    const RANGE = 'Tabela1!A:C'; // Alterado para bater com o nome "Tabela1" da imagem
+    <!-- Scripts de Compatibilidade do Firebase Legacy (v9/v10 compat) -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    
+    <script>
+        // Configuração do seu Firebase (Chaves mantidas do seu projeto)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
+            authDomain: "://firebaseapp.com",
+            projectId: "oficina-3d-minerva",
+            storageBucket: "oficina-3d-minerva.firebasestorage.app",
+            messagingSenderId: "241260901502",
+            appId: "1:241260901502:web:63fb6e57a446eea876142f",
+        };
 
-    async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
-        const statusTxt = document.getElementById('status-validacao');
-        if (statusTxt) {
-            statusTxt.style.display = "block";
-            statusTxt.innerText = "Verificando permissões na base da FAETEC...";
-        }
+        // Inicializa o Firebase Auth
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
 
-        const url = `https://googleapis.com{SPREADSHEET_ID}/values/${RANGE}?key=${GOOGLE_API_KEY}`;
+        // =========================================================================
+        // CONFIGURAÇÃO DA SUA PLANILHA GOOGLE (Preencha estes dois campos abaixo)
+        // =========================================================================
+        const SPREADSHEET_ID = 'AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp';
+        const GOOGLE_API_KEY = 'https://script.google.com/macros/s/AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp/exec'; 
+        const RANGE = 'Tabela1!A:C'; // Intervalo configurado conforme a imagem enviada
 
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (!data.values) {
-                throw new Error("Planilha vazia ou inacessível.");
+        // Função responsável por ler a planilha e injetar as permissões no sistema
+        async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
+            const statusTxt = document.getElementById('status-validacao');
+            if (statusTxt) {
+                statusTxt.style.display = "block";
+                statusTxt.style.color = "#ffb703";
+                statusTxt.innerText = "Verificando permissões na base da FAETEC...";
             }
 
-            const linhas = data.values.slice(1); // Ignora a linha 1 (cabeçalhos)
-            
-            // Busca o e-mail do aluno limpando espaços extras
-            const dadosAluno = linhas.find(linha => {
-                return linha[0] && linha[0].toLowerCase().trim() === emailUsuario.toLowerCase().trim();
-            });
+            // URL oficial da Google Sheets API v4 para buscar dados publicamente via API Key
+            const url = `https://googleapis.com{SPREADSHEET_ID}/values/${RANGE}?key=${GOOGLE_API_KEY}`;
 
-            if (dadosAluno) {
-                // Captura os valores das colunas B (curso_3d) e C (curso_dron)
-                const valor3D = dadosAluno[1] ? dadosAluno[1].toLowerCase().trim() : 'não';
-                const valorDrone = dadosAluno[2] ? dadosAluno[2].toLowerCase().trim() : 'não';
-
-                const tem3D = (valor3D === 'sim');
-                const temDrone = (valorDrone === 'sim');
-
-                // Se o e-mail está na planilha, mas ambas as colunas estão como "não", barra o aluno
-                if (!tem3D && !temDrone) {
-                    if (statusTxt) statusTxt.innerHTML = "<span style='color: #ef4444;'>Acesso Pendente: Aguarde a liberação do administrador para os cursos.</span>";
-                    auth.signOut();
-                    localStorage.clear();
-                    return;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (!data.values) {
+                    throw new Error("Planilha vazia ou com formato incorreto.");
                 }
 
-                // Cria o objeto de permissões estruturado
-                const permissoes = {
-                    impressao3D: tem3D,
-                    drone: temDrone
-                };
+                const linhas = data.values.slice(1); // Ignora a linha 1 contendo os cabeçalhos
+                
+                // Procura na coluna A se o e-mail digitado existe na planilha
+                const dadosAluno = linhas.find(linha => {
+                    return linha && linha[0] && linha[0].toLowerCase().trim() === emailUsuario.toLowerCase().trim();
+                });
 
-                // Grava as informações validadas com sucesso no navegador
-                localStorage.setItem('usuario_nome', displayName || emailUsuario.split('@')[0]);
-                localStorage.setItem('usuario_email', emailUsuario);
-                localStorage.setItem('usuario_foto', photoURL);
-                localStorage.setItem('permissoes_minerva', JSON.stringify(permissoes));
+                if (dadosAluno) {
+                    // Captura os valores de curso_3d (coluna B) e curso_dron (coluna C)
+                    const valor3D = dadosAluno[1] ? dadosAluno[1].toLowerCase().trim() : 'não';
+                    const valorDrone = dadosAluno[2] ? dadosAluno[2].toLowerCase().trim() : 'não';
 
-                // Autoriza a entrada para o painel
-                window.location.href = "dashboard.html";
+                    const tem3D = (valor3D === 'sim');
+                    const temDrone = (valorDrone === 'sim');
 
-            } else {
-                // Caso o e-mail não exista de forma alguma na planilha
-                if (statusTxt) statusTxt.innerHTML = "<span style='color: #ef4444;'>Acesso Negado: Seu e-mail não está cadastrado na lista de alunos do Projeto Minerva.</span>";
+                    // Cenário 1: E-mail cadastrado, mas o administrador colocou "não" em ambos os cursos
+                    if (!tem3D && !temDrone) {
+                        if (statusTxt) {
+                            statusTxt.style.color = "#ef4444";
+                            statusTxt.innerHTML = "Acesso Pendente:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>Seu cadastro foi localizado, mas nenhum curso foi liberado pelo administrador ainda.</span>";
+                        }
+                        auth.signOut();
+                        localStorage.clear();
+                        return;
+                    }
+
+                    // Monta a estrutura de permissões que o seu dashboard.html espera ler
+                    const permissoes = {
+                        impressao3D: tem3D,
+                        drone: temDrone
+                    };
+
+                    // Grava todos os metadados validados no cache local do navegador
+                    localStorage.setItem('usuario_nome', displayName || emailUsuario.split('@')[0]);
+                    localStorage.setItem('usuario_email', emailUsuario);
+                    localStorage.setItem('usuario_foto', photoURL);
+                    localStorage.setItem('permissoes_minerva', JSON.stringify(permissoes));
+
+                    // Redireciona com segurança total para dentro do painel
+                    window.location.href = "dashboard.html";
+
+                } else {
+                    // Cenário 2: O e-mail não existe na planilha do administrador de forma alguma
+                    if (statusTxt) {
+                        statusTxt.style.color = "#ef4444";
+                        statusTxt.innerHTML = "Acesso Negado:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>Este e-mail Google não está cadastrado na lista de alunos do Projeto Minerva.</span>";
+                    }
+                    auth.signOut();
+                    localStorage.clear();
+                }
+
+            } catch (error) {
+                console.error("Erro técnico na validação da planilha: ", error);
+                if (statusTxt) {
+                    statusTxt.style.color = "#ef4444";
+                    statusTxt.innerText = "Erro ao conectar com a base de dados de permissões. Verifique as chaves de API.";
+                }
                 auth.signOut();
-                localStorage.clear();
             }
-
-        } catch (error) {
-            console.error("Erro na validação da planilha: ", error);
-            if (statusTxt) statusTxt.innerText = "Erro ao conectar com o banco de dados de permissões. Verifique sua API Key.";
-            auth.signOut();
         }
-    }
 
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            // Toda vez que a página inicia, se houver usuário, revalida direto na planilha
-            verificarPermissoesPlanilha(user.email, user.displayName, user.photoURL);
-        }
-    });
+        // Monitor de persistência de sessão do Firebase
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Se já houver usuário logado no navegador, força a revalidação imediata com a planilha
+                verificarPermissoesPlanilha(user.email, user.displayName, user.photoURL);
+            }
+        });
 
-    document.getElementById('login-btn').addEventListener('click', () => {
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                verificarPermissoesPlanilha(result.user.email, result.user.displayName, result.user.photoURL);
-            })
-            .catch((error) => {
-                console.error("Erro no login: ", error);
-                alert("Erro ao autenticar com o Google: " + error.message);
-            });
-    });
-</script>
-
+        // Evento de clique do botão para disparar o Pop-up de login do Google
+        document.getElementById('login-btn').addEventListener('click', () => {
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    // Após a janela do Google fechar, dispara a verificação com o e-mail retornado
+                    verificarPermissoesPlanilha(result.user.email, result.user.displayName, result.user.photoURL);
+                })
+                .catch((error) => {
+                    console.error("Erro no login Google Auth: ", error);
+                    alert("Erro ao autenticar com o Google: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
