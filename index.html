@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Projeto Minerva</title>
+    <!-- Links de fontes oficiais restabelecidos -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Link oficial do FontAwesome para carregar os ícones do cubo e da Google -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="./css/estilos.css">
 </head>
@@ -21,7 +24,7 @@
         
         <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
         
-        <!-- Área de status para exibir os motivos de bloqueio vindos do Apps Script -->
+        <!-- Área de status para exibir as mensagens de retorno do seu Apps Script -->
         <p id="status-validacao" style="color: #ffb703; font-weight: 600; display: none; margin-bottom: 20px; font-size: 14px; line-height: 1.4; text-align: center; max-width: 320px;"></p>
 
         <button class="btn-google" id="login-btn">
@@ -31,10 +34,12 @@
         <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
+    <!-- Scripts CDN completos e oficiais do Firebase Auth (Compat) -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     
     <script>
+        // Configuração do seu Firebase (Chaves originais do seu projeto)
         const firebaseConfig = {
             apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
             authDomain: "://firebaseapp.com",
@@ -44,13 +49,15 @@
             appId: "1:241260901502:web:63fb6e57a446eea876142f",
         };
 
+        // Inicializa o Firebase Auth
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
         // URL do seu Google Apps Script Web App executando perfeitamente
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8u90Sq-JP1-iKfl4Z9C-uP8-i8dB_5jdBSHQ7TLkV25ENSfK3t0xnca70F2njPaoDcw/exec';
 
+        // Função responsável por ler o Apps Script e validar as permissões
         async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
             const statusTxt = document.getElementById('status-validacao');
             if (statusTxt) {
@@ -59,17 +66,21 @@
                 statusTxt.innerText = "Verificando permissões na base da FAETEC...";
             }
 
-            const url = `${APPS_SCRIPT_URL}?email=${encodeURIComponent(emailUsuario)}`;
+            // Define um nome padrão caso a conta Google não possua displayName configurado
+            const nomeAluno = displayName || emailUsuario.split('@')[0];
+
+            // NOVIDADE: Agora enviamos o e-mail AND o nome do aluno codificados na URL para o Apps Script
+            const url = `${APPS_SCRIPT_URL}?email=${encodeURIComponent(emailUsuario)}&nome=${encodeURIComponent(nomeAluno)}`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                // Se o Apps Script responder que não está autorizado (Aluno novo ou bloqueado)
+                // Se o Apps Script responder que não está autorizado (Aluno novo ou com cursos em "não")
                 if (!data || data.autorizado === false) {
                     if (statusTxt) {
                         statusTxt.style.color = "#ef4444";
-                        // Exibe dinamicamente o motivo exato retornado pelo seu script backend
+                        // Exibe dinamicamente o motivo exato retornado pelo seu script backend da planilha
                         statusTxt.innerHTML = `Acesso Retido:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>${data.motivo || "Aguarde a liberação do administrador."}</span>`;
                     }
                     auth.signOut();
@@ -77,13 +88,13 @@
                     return;
                 }
 
-                // Se chegou aqui, data.autorizado é true. Salvamos o bloco de permissões exato enviado pelo script
-                localStorage.setItem('usuario_nome', displayName || emailUsuario.split('@')[0]);
+                // Grava os dados validados com sucesso no cache local (localStorage) para uso no painel
+                localStorage.setItem('usuario_nome', nomeAluno);
                 localStorage.setItem('usuario_email', emailUsuario);
                 localStorage.setItem('usuario_foto', photoURL);
                 localStorage.setItem('permissoes_minerva', JSON.stringify(data.permissoes));
 
-                // Vai para o painel com as permissões perfeitamente validadas
+                // Avança com segurança para dentro do painel logado
                 window.location.href = "dashboard.html";
 
             } catch (error) {
@@ -96,19 +107,23 @@
             }
         }
 
+        // Monitor de persistência de sessão do Firebase
         auth.onAuthStateChanged(user => {
             if (user) {
+                // Se o usuário já possuir sessão no navegador, força a revalidação imediata na planilha
                 verificarPermissoesPlanilha(user.email, user.displayName, user.photoURL);
             }
         });
 
+        // Evento de clique do botão para disparar o Pop-up de login do Google
         document.getElementById('login-btn').addEventListener('click', () => {
             auth.signInWithPopup(provider)
                 .then((result) => {
+                    // Após a autenticação bem-sucedida, repassa os dados coletados do Google para a validação
                     verificarPermissoesPlanilha(result.user.email, result.user.displayName, result.user.photoURL);
                 })
                 .catch((error) => {
-                    console.error("Erro no login: ", error);
+                    console.error("Erro no login Google Auth: ", error);
                     alert("Erro ao autenticar com o Google: " + error.message);
                 });
         });
