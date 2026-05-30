@@ -1,17 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficina de Impressão 3D - Projeto Minerva</title>
-    <!-- Importação de fontes corrigida idêntica à página de drones -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- RESTAURADO: Link oficial do FontAwesome copiado do código de drones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="./css/estilos.css">
 </head>
 <body>
 
@@ -28,14 +28,13 @@
 
     <div class="layout-container">
         <main class="content-frame-area">
-            <!-- Iframe principal que renderiza perfeitamente as subpáginas locais -->
             <iframe id="conteudo-frame" src="./inicio-3d.html" allow="autoplay"></iframe>
         </main>
 
         <aside class="resources-sidebar">
             <div class="sidebar-title">Navegação do Curso</div>
             
-            <button class="resource-btn" onclick="carregarConteudo('./manuais.html', this)">
+            <button class="resource-btn active" onclick="carregarConteudo('./manuais.html', this)">
                 <i class="fas fa-file-pdf color-pdf"></i>
                 <div class="info">
                     <span class="title">Manuais Técnicos</span>
@@ -70,6 +69,25 @@
     </div>
 
     <script>
+        // SCRIPT DE SEGURANÇA: Bloqueia o acesso se não tiver a permissão na planilha
+        (function verificarAcessoCurso() {
+            const email = localStorage.getItem('usuario_email');
+            const permsRaw = localStorage.getItem('permissoes_minerva');
+            
+            if (!email || !permsRaw) {
+                window.location.href = "index.html";
+                return;
+            }
+            
+            const permissoes = JSON.parse(permsRaw);
+            // Verifica as duas grafias possíveis de retorno para evitar conflitos
+            if (permissoes.impressao3D !== true && permissoes.impressao3d !== true) {
+                alert("Acesso negado: Você não tem permissão para acessar esta oficina.");
+                window.location.href = "dashboard.html";
+            }
+        })();
+
+        // Função de controle do Iframe
         function carregarConteudo(url, elemento) {
             document.getElementById('conteudo-frame').src = url;
             document.querySelectorAll('.resource-btn').forEach(btn => btn.classList.remove('active'));
@@ -78,4 +96,3 @@
     </script>
 </body>
 </html>
-
