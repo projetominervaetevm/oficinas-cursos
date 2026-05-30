@@ -102,6 +102,11 @@ body {
     gap: 15px; 
 }
 
+.logo-group i {
+    color: #00a3ff;
+    font-size: 22px;
+}
+
 .logo-group span { 
     font-family: 'Urbanist', sans-serif; 
     font-size: 18px; 
@@ -133,6 +138,41 @@ body {
 }
 
 .btn-voltar:hover { background-color: #008be0; }
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.user-name span {
+    color: white;
+    font-weight: 600;
+}
+
+.btn-sair {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.btn-sair:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
 
 /* ==========================================
    4. ESTRUTURA DE CURSOS (DUAS COLUNAS / IFRAME)
@@ -208,3 +248,131 @@ body {
 .color-video { color: #ff0000; }
 .color-dica { color: #eab308; }
 .color-forum { color: #10b981; }
+
+/* ==========================================
+   5. ADICIONADO: PAINEL PRINCIPAL (dashboard.html)
+   ========================================== */
+.main-dashboard {
+    flex-grow: 1;
+    padding: 40px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+}
+
+.welcome-header {
+    margin-bottom: 40px;
+}
+
+.welcome-header h2 {
+    font-family: 'Urbanist', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+}
+
+.welcome-header p {
+    color: #64748b;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.course-card {
+    background-color: #1a2332;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-card.bloqueado {
+    opacity: 0.6;
+}
+
+.course-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 163, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.course-icon-wrapper i {
+    font-size: 24px;
+    color: #00a3ff;
+}
+
+.course-card h3 {
+    font-family: 'Urbanist', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+}
+
+.course-card p {
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.btn-acessar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #00a3ff;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-acessar:hover {
+    background-color: #008be0;
+}
+
+.btn-acessar:disabled, .course-card.bloqueado .btn-acessar {
+    background-color: #334155;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+.badge-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.badge-status.liberado {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.2);
+}
