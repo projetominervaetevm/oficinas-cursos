@@ -21,7 +21,7 @@
         
         <p class="login-subtitle">Faça login com sua conta Google para acessar seus cursos, oficinas e materiais técnicos.</p>
         
-        <!-- Área de status onde aparecem as mensagens de validação da planilha -->
+        <!-- Área de status para exibir os motivos de bloqueio vindos do Apps Script -->
         <p id="status-validacao" style="color: #ffb703; font-weight: 600; display: none; margin-bottom: 20px; font-size: 14px; line-height: 1.4; text-align: center; max-width: 320px;"></p>
 
         <button class="btn-google" id="login-btn">
@@ -31,12 +31,10 @@
         <div class="login-footer">Plataforma Maker • 2026</div>
     </div>
 
-    <!-- Scripts de Compatibilidade do Firebase Legacy (v9/v10 compat) -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
     
     <script>
-        // Configuração do seu Firebase (Chaves mantidas do seu projeto)
         const firebaseConfig = {
             apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
             authDomain: "://firebaseapp.com",
@@ -46,19 +44,13 @@
             appId: "1:241260901502:web:63fb6e57a446eea876142f",
         };
 
-        // Inicializa o Firebase Auth
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
-        // =========================================================================
-        // CONFIGURAÇÃO DA SUA PLANILHA GOOGLE (Preencha estes dois campos abaixo)
-        // =========================================================================
-        const SPREADSHEET_ID = 'AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp';
-        const GOOGLE_API_KEY = 'https://script.google.com/macros/s/AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp/exec'; 
-        const RANGE = 'Tabela1!A:C'; // Intervalo configurado conforme a imagem enviada
+        // URL do seu Google Apps Script Web App executando perfeitamente
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4QJOIeDNm9yfWYK1onbsEuvpE_DmITuJqoAVB_o9MGj3DkOxpHY_8FFUooO1JXoXp/exec';
 
-        // Função responsável por ler a planilha e injetar as permissões no sistema
         async function verificarPermissoesPlanilha(emailUsuario, displayName, photoURL) {
             const statusTxt = document.getElementById('status-validacao');
             if (statusTxt) {
@@ -67,95 +59,56 @@
                 statusTxt.innerText = "Verificando permissões na base da FAETEC...";
             }
 
-            // URL oficial da Google Sheets API v4 para buscar dados publicamente via API Key
-            const url = `https://googleapis.com{SPREADSHEET_ID}/values/${RANGE}?key=${GOOGLE_API_KEY}`;
+            const url = `${APPS_SCRIPT_URL}?email=${encodeURIComponent(emailUsuario)}`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                if (!data.values) {
-                    throw new Error("Planilha vazia ou com formato incorreto.");
-                }
-
-                const linhas = data.values.slice(1); // Ignora a linha 1 contendo os cabeçalhos
-                
-                // Procura na coluna A se o e-mail digitado existe na planilha
-                const dadosAluno = linhas.find(linha => {
-                    return linha && linha[0] && linha[0].toLowerCase().trim() === emailUsuario.toLowerCase().trim();
-                });
-
-                if (dadosAluno) {
-                    // Captura os valores de curso_3d (coluna B) e curso_dron (coluna C)
-                    const valor3D = dadosAluno[1] ? dadosAluno[1].toLowerCase().trim() : 'não';
-                    const valorDrone = dadosAluno[2] ? dadosAluno[2].toLowerCase().trim() : 'não';
-
-                    const tem3D = (valor3D === 'sim');
-                    const temDrone = (valorDrone === 'sim');
-
-                    // Cenário 1: E-mail cadastrado, mas o administrador colocou "não" em ambos os cursos
-                    if (!tem3D && !temDrone) {
-                        if (statusTxt) {
-                            statusTxt.style.color = "#ef4444";
-                            statusTxt.innerHTML = "Acesso Pendente:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>Seu cadastro foi localizado, mas nenhum curso foi liberado pelo administrador ainda.</span>";
-                        }
-                        auth.signOut();
-                        localStorage.clear();
-                        return;
-                    }
-
-                    // Monta a estrutura de permissões que o seu dashboard.html espera ler
-                    const permissoes = {
-                        impressao3D: tem3D,
-                        drone: temDrone
-                    };
-
-                    // Grava todos os metadados validados no cache local do navegador
-                    localStorage.setItem('usuario_nome', displayName || emailUsuario.split('@')[0]);
-                    localStorage.setItem('usuario_email', emailUsuario);
-                    localStorage.setItem('usuario_foto', photoURL);
-                    localStorage.setItem('permissoes_minerva', JSON.stringify(permissoes));
-
-                    // Redireciona com segurança total para dentro do painel
-                    window.location.href = "dashboard.html";
-
-                } else {
-                    // Cenário 2: O e-mail não existe na planilha do administrador de forma alguma
+                // Se o Apps Script responder que não está autorizado (Aluno novo ou bloqueado)
+                if (!data || data.autorizado === false) {
                     if (statusTxt) {
                         statusTxt.style.color = "#ef4444";
-                        statusTxt.innerHTML = "Acesso Negado:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>Este e-mail Google não está cadastrado na lista de alunos do Projeto Minerva.</span>";
+                        // Exibe dinamicamente o motivo exato retornado pelo seu script backend
+                        statusTxt.innerHTML = `Acesso Retido:<br><span style='font-size:12px; font-weight:400; color:#94a3b8;'>${data.motivo || "Aguarde a liberação do administrador."}</span>`;
                     }
                     auth.signOut();
                     localStorage.clear();
+                    return;
                 }
 
+                // Se chegou aqui, data.autorizado é true. Salvamos o bloco de permissões exato enviado pelo script
+                localStorage.setItem('usuario_nome', displayName || emailUsuario.split('@')[0]);
+                localStorage.setItem('usuario_email', emailUsuario);
+                localStorage.setItem('usuario_foto', photoURL);
+                localStorage.setItem('permissoes_minerva', JSON.stringify(data.permissoes));
+
+                // Vai para o painel com as permissões perfeitamente validadas
+                window.location.href = "dashboard.html";
+
             } catch (error) {
-                console.error("Erro técnico na validação da planilha: ", error);
+                console.error("Erro na comunicação com o Apps Script: ", error);
                 if (statusTxt) {
                     statusTxt.style.color = "#ef4444";
-                    statusTxt.innerText = "Erro ao conectar com a base de dados de permissões. Verifique as chaves de API.";
+                    statusTxt.innerText = "Erro ao conectar com a base de dados de permissões. Tente novamente.";
                 }
                 auth.signOut();
             }
         }
 
-        // Monitor de persistência de sessão do Firebase
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Se já houver usuário logado no navegador, força a revalidação imediata com a planilha
                 verificarPermissoesPlanilha(user.email, user.displayName, user.photoURL);
             }
         });
 
-        // Evento de clique do botão para disparar o Pop-up de login do Google
         document.getElementById('login-btn').addEventListener('click', () => {
             auth.signInWithPopup(provider)
                 .then((result) => {
-                    // Após a janela do Google fechar, dispara a verificação com o e-mail retornado
                     verificarPermissoesPlanilha(result.user.email, result.user.displayName, result.user.photoURL);
                 })
                 .catch((error) => {
-                    console.error("Erro no login Google Auth: ", error);
+                    console.error("Erro no login: ", error);
                     alert("Erro ao autenticar com o Google: " + error.message);
                 });
         });
