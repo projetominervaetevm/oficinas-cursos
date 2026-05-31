@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Minerva Supervisor</title>
+
+    <!-- Configurações Obrigatórias do PWA Supervisor -->
+    <link rel="manifest" href="manifest-admin.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Supervisor">
+    <link rel="apple-touch-icon" href="./images/logominerva.png">
+    <meta name="theme-color" content="#00a3ff">
+
+    <!-- Script de Registro do Service Worker Exclusivo do Admin -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw-admin.js')
+                    .then(reg => console.log('PWA Supervisor ativo!', reg))
+                    .catch(err => console.log('Erro no PWA Supervisor:', err));
+            });
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -85,8 +105,7 @@
     </div>
 
     <script>
-        // INSIRA O SEU LINK DA API DO SUPERVISOR AQUI
-        const API_URL = "https://script.google.com/macros/s/AKfycbxZzE4Vs883Lvap5XEbLXnX2qru-btN27hk0-Weqd9cyL56L9uGrdql4IQWU76sd4vB1Q/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzZzE4Vs883Lvap5XEbLXnX2qru-btN27hk0-Weqd9cyL56L9uGrdql4IQWU76sd4vB1Q/exec"; 
         const SENHA_MESTRA = "0000";
         let alunos = [];
 
