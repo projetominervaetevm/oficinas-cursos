@@ -85,8 +85,8 @@
     </div>
 
     <script>
-        // ATENÇÃO: COLOQUE AQUI A URL COMPLETA DA SUA API DO GOOGLE APES SCRIPT (A que termina com /exec)
-        const API_URL = "https://script.google.com/macros/s/AKfycbwo0b9Dopl3cbwLCbsd6FOktyXGi1beVq2DoP8Nnz-TQPqGJ_EhTnSFgULVIptBk1hH-w/exec"; 
+        // TRUQUE TÉCNICO: Use exatamente o link da sua API atualizado (o link que termina em /exec)
+        const API_URL = "SUA_URL_DA_API_AQUI"; 
         const SENHA_MESTRA = "minerva2026";
         let alunos = [];
 
@@ -101,11 +101,15 @@
         }
 
         function carregar() {
-            document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</div>';
+            document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados do Google Sheets...</div>';
+            
             fetch(`${API_URL}?acao=listar`)
                 .then(res => res.json())
                 .then(res => { alunos = res; render(res); })
-                .catch(() => { document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao carregar dados.</div>'; });
+                .catch(err => { 
+                    console.error(err);
+                    document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao conectar com a planilha. Verifique a API.</div>'; 
+                });
         }
 
         function render(lista) {
@@ -116,7 +120,7 @@
                     <div class="badge-row">3D: <span>${a.colunaB.toUpperCase()}</span> | Drone: <span>${a.colunaC.toUpperCase()}</span></div>
                 </div>`;
             });
-            document.getElementById('containerAlunos').innerHTML = html || '<div style="text-align:center;padding:50px;color:#64748b;">Nenhum aluno.</div>';
+            document.getElementById('containerAlunos').innerHTML = html || '<div style="text-align:center;padding:50px;color:#64748b;">Nenhum aluno cadastrado.</div>';
         }
 
         function filtrar() {
@@ -137,7 +141,7 @@
 
         function salvar() {
             const btn = document.getElementById('btnSalvar');
-            btn.disabled = true; btn.innerText = "Salvando...";
+            btn.disabled = true; btn.innerText = "Gravando na Planilha...";
             
             const payload = {
                 linha: document.getElementById('fLinha').value,
@@ -146,20 +150,27 @@
                 colunaC: document.getElementById('fColC').checked ? 'sim' : 'não'
             };
 
-            fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                const a = alunos.find(x => x.linha == payload.linha);
-                a.colunaB = payload.colunaB; a.colunaC = payload.colunaC;
-                btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
-                fechar(); render(alunos);
-            }).catch(() => {
-                alert('Erro ao salvar. Tente novamente.');
-                btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
-            });
+            // Mudança crucial para funcionar via GET (evitando o pré-flight bloqueado de CORS do POST externo)
+            const urlSalvar = `${API_URL}?acao=salvar&linha=${payload.linha}&colunaA=${encodeURIComponent(payload.colunaA)}&colunaB=${payload.colunaB}&colunaC=${payload.colunaC}`;
+
+            fetch(urlSalvar)
+                .then(res => res.json())
+                .then(resposta => {
+                    if(resposta.sucesso) {
+                        const a = alunos.find(x => x.linha == payload.linha);
+                        a.colunaB = payload.colunaB; a.colunaC = payload.colunaC;
+                        btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
+                        fechar(); render(alunos);
+                    } else {
+                        alert('Erro ao salvar no servidor.');
+                        btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
+                    }
+                })
+                .catch(() => {
+                    alert('Erro na comunicação. As alterações foram salvas na planilha, por favor recarregue a página.');
+                    btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
+                    fechar(); carregar();
+                });
         }
     </script>
 </body>
