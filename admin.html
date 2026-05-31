@@ -2,19 +2,15 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Minerva Supervisor</title>
 
-    <!-- Configurações Obrigatórias do PWA Supervisor -->
     <link rel="manifest" href="manifest-admin.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Supervisor">
     <link rel="apple-touch-icon" href="./images/logominerva.png">
-    <meta name="theme-color" content="#00a3ff">
-
-    <!-- Script de Registro do Service Worker Exclusivo do Admin -->
-    <script>
+    <meta name="theme-color" content="#0f172a"> <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw-admin.js')
@@ -26,17 +22,46 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: #0f172a; color: #f1f5f9; padding: 15px; }
         
-        #telaLogin { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 80vh; text-align: center; }
+        body { 
+            background-color: #0f172a; 
+            color: #f1f5f9; 
+            padding: 20px 15px; 
+            /* CORREÇÃO 1: Evita que o topo do app suma embaixo do notch/bateria do iPhone/Android */
+            padding-top: calc(20px + env(safe-area-inset-top));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            min-height: 100vh;
+        }
+        
+        /* CORREÇÃO 2: Login centralizado perfeitamente independente do tamanho da tela */
+        #telaLogin { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 80vh; 
+            text-align: center; 
+        }
+        
         .login-card { background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 360px; }
         .login-card i.logo { color: #00a3ff; font-size: 48px; margin-bottom: 15px; }
         .login-card h2 { font-family: 'Urbanist', sans-serif; margin-bottom: 20px; font-size: 22px; }
         
-        .busca-input { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; margin-bottom: 15px; outline: none; }
-        .btn-login { width: 100%; padding: 12px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .busca-input { 
+            width: 100%; 
+            padding: 14px; /* Aumentado levemente para melhor toque com o polegar */
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            color: white; 
+            margin-bottom: 15px; 
+            outline: none; 
+            font-size: 16px; /* Evita zoom automático esquisito no iOS ao focar */
+        }
+        .btn-login { width: 100%; padding: 14px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
         
         #painelPrincipal { display: none; }
         header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -44,17 +69,34 @@
         header h1 { font-family: 'Urbanist', sans-serif; font-size: 16px; font-weight: 800; color: #94a3b8; }
         header span { color: #fff; }
         
-        .aluno-card { background: #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid #334155; cursor: pointer; }
-        .aluno-info { font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #fff; word-break: break-all; }
-        .badge-row { display: flex; gap: 8px; font-size: 11px; color: #94a3b8; }
+        /* Ajuste fino nos cards dos alunos (Melhor espaçamento no toque do celular) */
+        .aluno-card { background: #1e293b; border-radius: 12px; padding: 18px; margin-bottom: 12px; border: 1px solid #334155; cursor: pointer; transition: background 0.2s; }
+        .aluno-card:active { background: #24334d; } /* Efeito visual nativo ao pressionar o dedo */
+        .aluno-info { font-weight: 600; font-size: 15px; margin-bottom: 8px; color: #fff; word-break: break-all; }
+        .badge-row { display: flex; gap: 8px; font-size: 12px; color: #94a3b8; }
         .badge-row span { color: #00a3ff; font-weight: 700; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 100; padding: 20px; }
+        /* CORREÇÃO 3: Modal totalmente adaptável para celular se o teclado subir */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: #0f172a; 
+            z-index: 100; 
+            padding: 20px; 
+            padding-top: calc(20px + env(safe-area-inset-top));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            overflow-y: auto; /* Permite rolar o modal se a tela for pequena */
+        }
+        
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
-        .form-group input[type="text"] { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; }
+        .form-group input[type="text"] { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 16px; }
         
-        .switch-row { display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        .switch-row { display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
@@ -62,7 +104,7 @@
         input:checked + .slider { background-color: #00a3ff; }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        .btn-save { width: 100%; padding: 15px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; margin-top: 20px; }
+        .btn-save { width: 100%; padding: 16px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; margin-top: 20px; font-size: 16px; }
         .erro-msg { color: #ef4444; font-size: 13px; margin-top: 10px; display: none; }
     </style>
 </head>
@@ -105,6 +147,7 @@
     </div>
 
     <script>
+        // Mantive a sua lógica perfeita de conexões intacta
         const API_URL = "https://script.google.com/macros/s/AKfycbzZzE4Vs883Lvap5XEbLXnX2qru-btN27hk0-Weqd9cyL56L9uGrdql4IQWU76sd4vB1Q/exec"; 
         const SENHA_MESTRA = "0000";
         let alunos = [];
@@ -120,7 +163,7 @@
         }
 
         function carregar() {
-            document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados da planilha...</div>';
+            document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</div>';
             
             fetch(`${API_URL}?acao=listar`, {
                 method: 'GET',
@@ -136,12 +179,12 @@
                     alunos = res; 
                     render(res); 
                 } else {
-                    document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">O servidor não retornou o formato esperado.</div>';
+                    document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro no formato dos dados.</div>';
                 }
             })
             .catch(err => { 
                 console.error(err);
-                document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao conectar. Garanta que a API está configurada como "Qualquer pessoa".</div>'; 
+                document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao conectar ao banco de dados.</div>'; 
             });
         }
 
