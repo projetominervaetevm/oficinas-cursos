@@ -86,7 +86,7 @@
 
     <script>
         // ATENÇÃO: COLOQUE AQUI A URL COMPLETA DA SUA API DO GOOGLE APES SCRIPT (A que termina com /exec)
-        const API_URL = "https://script.google.com/macros/s/AKfycbznxaUnlhKIk95Fa1VKxedTwxVSDWU30PeZUW-jqamKhYWfsB2tfwg-tYYMeouaObbuwg/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwo0b9Dopl3cbwLCbsd6FOktyXGi1beVq2DoP8Nnz-TQPqGJ_EhTnSFgULVIptBk1hH-w/exec"; 
         const SENHA_MESTRA = "minerva2026";
         let alunos = [];
 
