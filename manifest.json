@@ -1,0 +1,16 @@
+{
+  "name": "Minerva ADM",
+  "short_name": "MinervaADM",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#002F6C",
+  "icons": [
+    {
+      "src": "./images/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
