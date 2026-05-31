@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minerva Supervisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: #0f172a; color: #f1f5f9; padding: 15px; }
+        
+        #telaLogin { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 80vh; text-align: center; }
+        .login-card { background: #1e293b; padding: 30px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 360px; }
+        .login-card i.logo { color: #00a3ff; font-size: 48px; margin-bottom: 15px; }
+        .login-card h2 { font-family: 'Urbanist', sans-serif; margin-bottom: 20px; font-size: 22px; }
+        
+        .busca-input { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; margin-bottom: 15px; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        
+        #painelPrincipal { display: none; }
+        header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        header i { color: #00a3ff; font-size: 24px; }
+        header h1 { font-family: 'Urbanist', sans-serif; font-size: 16px; font-weight: 800; color: #94a3b8; }
+        header span { color: #fff; }
+        
+        .aluno-card { background: #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid #334155; cursor: pointer; }
+        .aluno-info { font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #fff; word-break: break-all; }
+        .badge-row { display: flex; gap: 8px; font-size: 11px; color: #94a3b8; }
+        .badge-row span { color: #00a3ff; font-weight: 700; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 100; padding: 20px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        .form-group input[type="text"] { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; }
+        
+        .switch-row { display: flex; align-items: center; justify-content: space-between; background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #00a3ff; }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .btn-save { width: 100%; padding: 15px; background: #00a3ff; color: white; border: none; border-radius: 8px; font-weight: 700; margin-top: 20px; }
+        .erro-msg { color: #ef4444; font-size: 13px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="telaLogin">
+        <div class="login-card">
+            <i class="fas fa-user-shield logo"></i>
+            <h2>Painel do Supervisor</h2>
+            <input type="password" id="txtSenha" class="busca-input" style="text-align: center;" placeholder="Senha de acesso">
+            <div id="msgErro" class="erro-msg">Senha incorreta!</div>
+            <button class="btn-login" onclick="verificarSenha()">ENTRAR</button>
+        </div>
+    </div>
+
+    <div id="painelPrincipal">
+        <header>
+            <i class="fas fa-cube"></i>
+            <h1>MINERVA • <span>SUPERVISOR</span></h1>
+        </header>
+        <input type="text" id="txtBusca" class="busca-input" placeholder="Buscar aluno..." oninput="filtrar()">
+        <div id="containerAlunos"></div>
+    </div>
+
+    <div id="modalEdicao" class="modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2>Autorizar Cursos</h2>
+            <i class="fas fa-times" onclick="fechar()" style="font-size:24px; cursor: pointer;"></i>
+        </div>
+        <input type="hidden" id="fLinha">
+        <div class="form-group">
+            <label>Aluno</label>
+            <input type="text" id="fColA" readonly style="opacity: 0.6;">
+        </div>
+        
+        <div class="switch-row"><span>Curso Impressão 3D</span><label class="switch"><input type="checkbox" id="fColB"><span class="slider"></span></label></div>
+        <div class="switch-row"><span>Curso de Drones</span><label class="switch"><input type="checkbox" id="fColC"><span class="slider"></span></label></div>
+
+        <button id="btnSalvar" class="btn-save" onclick="salvar()">SALVAR ALTERAÇÕES</button>
+    </div>
+
+    <script>
+        // ATENÇÃO: COLOQUE AQUI A URL COMPLETA DA SUA API DO GOOGLE APES SCRIPT (A que termina com /exec)
+        const API_URL = "https://script.google.com/macros/s/AKfycbwo0b9Dopl3cbwLCbsd6FOktyXGi1beVq2DoP8Nnz-TQPqGJ_EhTnSFgULVIptBk1hH-w/exec"; 
+        const SENHA_MESTRA = "minerva2026";
+        let alunos = [];
+
+        function verificarSenha() {
+            if(document.getElementById('txtSenha').value === SENHA_MESTRA) {
+                document.getElementById('telaLogin').style.display = 'none';
+                document.getElementById('painelPrincipal').style.display = 'block';
+                carregar();
+            } else {
+                document.getElementById('msgErro').style.display = 'block';
+            }
+        }
+
+        function carregar() {
+            document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</div>';
+            fetch(`${API_URL}?acao=listar`)
+                .then(res => res.json())
+                .then(res => { alunos = res; render(res); })
+                .catch(() => { document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao carregar dados.</div>'; });
+        }
+
+        function render(lista) {
+            let html = '';
+            lista.forEach(a => {
+                html += `<div class="aluno-card" onclick="abrir(${a.linha})">
+                    <div class="aluno-info">${a.colunaA}</div>
+                    <div class="badge-row">3D: <span>${a.colunaB.toUpperCase()}</span> | Drone: <span>${a.colunaC.toUpperCase()}</span></div>
+                </div>`;
+            });
+            document.getElementById('containerAlunos').innerHTML = html || '<div style="text-align:center;padding:50px;color:#64748b;">Nenhum aluno.</div>';
+        }
+
+        function filtrar() {
+            const b = document.getElementById('txtBusca').value.toLowerCase();
+            render(alunos.filter(a => a.colunaA.toLowerCase().includes(b)));
+        }
+
+        function abrir(l) {
+            const a = alunos.find(x => x.linha == l);
+            document.getElementById('fLinha').value = a.linha;
+            document.getElementById('fColA').value = a.colunaA;
+            document.getElementById('fColB').checked = a.colunaB === 'sim';
+            document.getElementById('fColC').checked = a.colunaC === 'sim';
+            document.getElementById('modalEdicao').style.display = 'block';
+        }
+
+        function fechar() { document.getElementById('modalEdicao').style.display = 'none'; }
+
+        function salvar() {
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = true; btn.innerText = "Salvando...";
+            
+            const payload = {
+                linha: document.getElementById('fLinha').value,
+                colunaA: document.getElementById('fColA').value,
+                colunaB: document.getElementById('fColB').checked ? 'sim' : 'não',
+                colunaC: document.getElementById('fColC').checked ? 'sim' : 'não'
+            };
+
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                const a = alunos.find(x => x.linha == payload.linha);
+                a.colunaB = payload.colunaB; a.colunaC = payload.colunaC;
+                btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
+                fechar(); render(alunos);
+            }).catch(() => {
+                alert('Erro ao salvar. Tente novamente.');
+                btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
+            });
+        }
+    </script>
+</body>
+</html>
