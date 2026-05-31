@@ -104,22 +104,38 @@
             document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados do Google Sheets...</div>';
             
             fetch(`${API_URL}?acao=listar`)
-                .then(res => res.json())
-                .then(res => { alunos = res; render(res); })
+                .then(res => {
+                    // Verifica se a resposta do Google veio correta (Status 200)
+                    if (!res.ok) throw new Error("Erro na resposta do servidor");
+                    return res.json();
+                })
+                .then(res => { 
+                    // Proteção crucial: Garante que o que chegou é de fato uma lista
+                    if (Array.isArray(res)) {
+                        alunos = res; 
+                        render(res); 
+                    } else {
+                        console.error("A API não retornou uma lista válida:", res);
+                        document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Aviso: O servidor não retornou os dados no formato esperado. Verifique as permissões da API.</div>';
+                    }
+                })
                 .catch(err => { 
-                    console.error(err);
-                    document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao conectar com a planilha. Verifique a API.</div>'; 
+                    console.error("Erro no Fetch:", err);
+                    document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center;color:#ef4444;padding:50px;">Erro ao conectar com a planilha. Certifique-se de implantar como "Qualquer pessoa".</div>'; 
                 });
         }
-
+        
         function render(lista) {
             let html = '';
-            lista.forEach(a => {
-                html += `<div class="aluno-card" onclick="abrir(${a.linha})">
-                    <div class="aluno-info">${a.colunaA}</div>
-                    <div class="badge-row">3D: <span>${a.colunaB.toUpperCase()}</span> | Drone: <span>${a.colunaC.toUpperCase()}</span></div>
-                </div>`;
-            });
+            // Dupla checagem antes de rodar o loop
+            if (lista && Array.isArray(lista)) {
+                lista.forEach(a => {
+                    html += `<div class="aluno-card" onclick="abrir(${a.linha})">
+                        <div class="aluno-info">${a.colunaA}</div>
+                        <div class="badge-row">3D: <span>${a.colunaB.toUpperCase()}</span> | Drone: <span>${a.colunaC.toUpperCase()}</span></div>
+                    </div>`;
+                });
+            }
             document.getElementById('containerAlunos').innerHTML = html || '<div style="text-align:center;padding:50px;color:#64748b;">Nenhum aluno cadastrado.</div>';
         }
 
