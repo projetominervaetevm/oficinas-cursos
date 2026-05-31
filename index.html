@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Projeto Minerva</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Minerva ADM">
+    <link rel="apple-touch-icon" href="./images/logominerva.png">
+    <meta name="theme-color" content="#00a3ff">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('PWA carregado com sucesso!', reg))
+                    .catch(err => console.log('Falha ao registrar o PWA:', err));
+            });
+        }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,14 +55,13 @@
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDnzxP7kc-qEKumUqyNAlVA_zCqgz3s4qU",
-            authDomain: "oficina-3d-minerva.firebaseapp.com", // Domínio corrigido e seguro
+            authDomain: "oficina-3d-minerva.firebaseapp.com", 
             projectId: "oficina-3d-minerva",
             storageBucket: "oficina-3d-minerva.firebasestorage.app",
             messagingSenderId: "241260901502",
             appId: "1:241260901502:web:63fb6e57a446eea876142f",
         };
 
-        // Inicialização estrita usando as dependências globais
         const app = window.firebase.initializeApp(firebaseConfig);
         const auth = window.firebase.auth();
         const provider = new window.firebase.auth.GoogleAuthProvider();
