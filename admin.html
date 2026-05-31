@@ -90,8 +90,6 @@
         const SENHA_MESTRA = "1111";
         let alunos = [];
 
-function verificarSenha() {
-
         function verificarSenha() {
             if(document.getElementById('txtSenha').value === SENHA_MESTRA) {
                 document.getElementById('telaLogin').style.display = 'none';
@@ -105,7 +103,6 @@ function verificarSenha() {
         function carregar() {
             document.getElementById('containerAlunos').innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin"></i> Carregando dados da planilha...</div>';
             
-            // Mudança para desviar o bloqueio do CORS: 'follow' lida de forma transparente com o redirecionamento 302 do Google
             fetch(`${API_URL}?acao=listar`, {
                 method: 'GET',
                 mode: 'cors',
@@ -187,7 +184,6 @@ function verificarSenha() {
                 }
             })
             .catch(() => {
-                // Como o Sheets processa mesmo sob restrição estrita, se falhar a resposta visual mas atualizar, recarregamos
                 btn.disabled = false; btn.innerText = "SALVAR ALTERAÇÕES";
                 fechar(); carregar();
             });
